@@ -1,0 +1,60 @@
+services:
+  # Backend API Service
+  - type: web
+    name: mile-vaganan-api
+    env: docker
+    dockerContext: .
+    dockerfilePath: apps/api/Dockerfile
+    plan: free
+    region: singapore # Close to India
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mile-vaganan-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: mile-vaganan-redis
+          property: connectionString
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        value: milevagananevents@gmail.com
+      - key: SMTP_PASS
+        sync: false
+      - key: ADMIN_EMAIL
+        value: milevagananevents@gmail.com
+    healthCheckPath: /
+
+  # Frontend Web App
+  - type: web
+    name: mile-vaganan-web
+    env: node
+    plan: free
+    region: singapore
+    buildCommand: npm install && npm run build --workspace=apps/web
+    startCommand: npm run start --workspace=apps/web
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: mile-vaganan-api
+          property: url
+
+databases:
+  - name: mile-vaganan-db
+    databaseName: milevaganan
+    user: milevaganan
+    plan: free
+    region: singapore
+
+# Redis is not available on free tier blueprint?
+# Render supports Redis instances.
+# If free tier doesn't support Redis, we might need to skip it or use a separate provider.
+# For now, I'll include it, user can remove if needed.
+# Note: Render Redis is not free. I will comment it out and use local cache or warn user.
+# Actually, let's leave it out to ensure "free" deployment works, as Redis is paid on Render.
+# I'll update the API to handle missing Redis if I were implementing caching, but for now I didn't implement Redis logic yet.

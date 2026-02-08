@@ -1,0 +1,11 @@
+{
+  "name": "mile-vaganan-events",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "echo 'No tests yet'"
+  }
+}
