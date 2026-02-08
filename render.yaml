@@ -24,7 +24,7 @@ services:
       - key: SMTP_USER
         value: milevagananevents@gmail.com
       - key: SMTP_PASS
-        sync: false
+        value: Durga@12 # Note: Ensure this is an App Password if using 2FA
       - key: ADMIN_EMAIL
         value: milevagananevents@gmail.com
     healthCheckPath: /
