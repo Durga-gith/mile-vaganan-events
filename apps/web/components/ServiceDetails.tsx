@@ -1,0 +1,274 @@
+'use client';
+
+import { useState } from 'react';
+import { ArrowRight, Calendar, MapPin, Users, Phone, Mail } from 'lucide-react';
+
+interface ServiceItem {
+  id: string;
+  category: 'venues' | 'catering' | 'decoration' | 'photography' | 'entertainment' | 'planning';
+  name: { en: string; ta: string };
+  description: { en: string; ta: string };
+  price: string;
+  image: string;
+  features: { en: string[]; ta: string[] };
+  capacity?: string;
+  location?: string;
+}
+
+const services: ServiceItem[] = [
+  {
+    id: '1',
+    category: 'venues',
+    name: { en: 'Royal Palace Convention Hall', ta: 'ராயல் பாலஸ் மாநாட்டு மண்டபம்' },
+    description: {
+      en: 'Elegant convention hall with traditional South Indian architecture, perfect for grand weddings.',
+      ta: 'பாரம்பரிய தென்னிந்திய கட்டிடக்கலையுடன் கூடிய அழகான மாநாட்டு மண்டபம், பிரம்மாண்டமான திருமணங்களுக்கு சரியானது.'
+    },
+    price: '₹75,000 - ₹1,50,000',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    features: {
+      en: ['AC Hall', 'Parking for 200 cars', 'Stage decoration', 'Generator backup', 'Dressing rooms'],
+      ta: ['ஏசி மண்டபம்', '200 கார்களுக்கு பார்க்கிங்', 'மேடை அலங்காரம்', 'ஜெனரேட்டர் பேக்கப்', 'டிரஸ்ஸிங் ரூம்கள்']
+    },
+    capacity: '500-1000 guests',
+    location: 'Chennai'
+  },
+  {
+    id: '2',
+    category: 'venues',
+    name: { en: 'Heritage Garden Resort', ta: 'பாரம்பரிய தோட்ட ரிசார்ட்' },
+    description: {
+      en: 'Beautiful outdoor venue with lush gardens and traditional architecture.',
+      ta: 'பசுமை தோட்டங்களுடன் கூடிய அழகான வெளிப்புற இடம் மற்றும் பாரம்பரிய கட்டிடக்கலை.'
+    },
+    price: '₹50,000 - ₹1,00,000',
+    image: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    features: {
+      en: ['Garden area', 'Outdoor mandap', 'Natural lighting', 'Photography spots', 'Green rooms'],
+      ta: ['தோட்ட பகுதி', 'வெளிப்புற மண்டபம்', 'இயற்கை ஒளி', 'புகைப்பட இடங்கள்', 'கிரீன் ரூம்கள்']
+    },
+    capacity: '300-600 guests',
+    location: 'Coimbatore'
+  },
+  {
+    id: '3',
+    category: 'catering',
+    name: { en: 'Traditional South Indian Feast', ta: 'பாரம்பரிய தென்னிந்திய விருந்து' },
+    description: {
+      en: 'Authentic South Indian vegetarian cuisine with traditional serving style.',
+      ta: 'பாரம்பரிய பரிமாறும் பாணியுடன் உண்மையான தென்னிந்திய சைவ உணவு.'
+    },
+    price: '₹800 - ₹1,200 per plate',
+    image: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    features: {
+      en: ['Traditional banana leaf service', '20+ varieties', 'Live dosa counter', 'Sweet varieties', 'Professional service'],
+      ta: ['பாரம்பரிய வாழை இலை சேவை', '20+ வகைகள்', 'லைவ் தோசை கவுண்டர்', 'இனிப்பு வகைகள்', 'தொழில்முறை சேவை']
+    }
+  },
+  {
+    id: '4',
+    category: 'decoration',
+    name: { en: 'Royal Mandap Decoration', ta: 'ராஜகம்பீர மண்டப அலங்காரம்' },
+    description: {
+      en: 'Grand mandap setup with fresh flowers, traditional elements and modern lighting.',
+      ta: 'புதிய பூக்கள், பாரம்பரிய உறுப்புகள் மற்றும் நவீன ஒளியுடன் பிரம்மாண்டமான மண்டப அமைப்பு.'
+    },
+    price: '₹25,000 - ₹75,000',
+    image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    features: {
+      en: ['Fresh flower arrangements', 'Traditional motifs', 'LED lighting', 'Fabric draping', 'Entrance decoration'],
+      ta: ['புதிய பூ அலங்காரங்கள்', 'பாரம்பரிய மோட்டிப்கள்', 'எல்இடி ஒளி', 'பேப்ரிக் டிராப்பிங்', 'நுழைவு அலங்காரம்']
+    }
+  },
+  {
+    id: '5',
+    category: 'photography',
+    name: { en: 'Premium Wedding Photography', ta: 'பிரீமியம் திருமண புகைப்படம்' },
+    description: {
+      en: 'Professional wedding photography with cinematic style and traditional coverage.',
+      ta: 'சினிமாடிக் பாணி மற்றும் பாரம்பரிய கவரேஜுடன் தொழில்முறை திருமண புகைப்படம்.'
+    },
+    price: '₹30,000 - ₹1,00,000',
+    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    features: {
+      en: ['2 photographers + 1 videographer', 'Drone shots', 'Traditional poses', 'Candid moments', 'Edited album'],
+      ta: ['2 புகைப்படகர்கள் + 1 வீடியோகிராபர்', 'ட்ரோன் ஷாட்கள்', 'பாரம்பரிய நிலைகள்', 'நேர்த்தியான தருணங்கள்', 'திருத்திய ஆல்பம்']
+    }
+  }
+];
+
+export default function ServiceDetails({ lang }: { lang: string }) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('venues');
+  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+
+  const categories = [
+    { id: 'venues', en: 'Venues', ta: 'இடங்கள்' },
+    { id: 'catering', en: 'Catering', ta: 'உணவு சேவைகள்' },
+    { id: 'decoration', en: 'Decoration', ta: 'அலங்காரம்' },
+    { id: 'photography', en: 'Photography', ta: 'புகைப்படம்' },
+    { id: 'entertainment', en: 'Entertainment', ta: 'பொழுதுபோக்கு' },
+    { id: 'planning', en: 'Planning', ta: 'திட்டமிடல்' }
+  ];
+
+  const filteredServices = services.filter(service => service.category === selectedCategory);
+
+  if (selectedService) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <button
+            onClick={() => setSelectedService(null)}
+            className="mb-6 flex items-center gap-2 text-maroon hover:text-maroon-dark transition"
+          >
+            ← {lang === 'en' ? 'Back to Services' : 'சேவைகளுக்கு திரும்பு'}
+          </button>
+
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <img
+                  src={selectedService.image}
+                  alt={selectedService.name[lang as keyof typeof selectedService.name]}
+                  className="w-full h-96 object-cover rounded-lg"
+                />
+              </div>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold text-maroon mb-4">
+                  {selectedService.name[lang as keyof typeof selectedService.name]}
+                </h1>
+                <p className="text-gray-600 mb-6">
+                  {selectedService.description[lang as keyof typeof selectedService.description]}
+                </p>
+                
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-maroon mb-3">
+                    {lang === 'en' ? 'Price Range' : 'விலை வரம்பு'}
+                  </h3>
+                  <p className="text-2xl font-bold text-gold">{selectedService.price}</p>
+                </div>
+
+                {selectedService.capacity && (
+                  <div className="mb-4 flex items-center gap-2">
+                    <Users className="text-gold" size={20} />
+                    <span>{selectedService.capacity}</span>
+                  </div>
+                )}
+
+                {selectedService.location && (
+                  <div className="mb-4 flex items-center gap-2">
+                    <MapPin className="text-gold" size={20} />
+                    <span>{selectedService.location}</span>
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-maroon mb-3">
+                    {lang === 'en' ? 'Features' : 'சிறப்பம்சங்கள்'}
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedService.features[lang as keyof typeof selectedService.features].map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="text-gold">✓</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex gap-4">
+                  <a
+                    href="#book"
+                    className="bg-maroon text-white px-6 py-3 rounded-full hover:bg-maroon-dark transition flex items-center gap-2"
+                    onClick={() => {
+                      // Store selected service in localStorage for booking form
+                      localStorage.setItem('selectedService', JSON.stringify(selectedService));
+                    }}
+                  >
+                    <Calendar size={20} />
+                    {lang === 'en' ? 'Book This Service' : 'இந்த சேவையை முன்பதிவு செய்யுங்கள்'}
+                  </a>
+                  <a
+                    href={`tel:+919363345067`}
+                    className="bg-gold text-maroon-dark px-6 py-3 rounded-full hover:bg-gold-dark transition flex items-center gap-2"
+                  >
+                    <Phone size={20} />
+                    {lang === 'en' ? 'Call Now' : 'இப்போது அழைக்கவும்'}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-serif font-bold text-maroon mb-4">
+            {lang === 'en' ? 'Our Services' : 'எங்கள் சேவைகள்'}
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            {lang === 'en'
+              ? 'Explore our premium wedding services with detailed pricing and stunning visuals.'
+              : 'விலை மற்றும் அழகான காட்சிகளுடன் எங்கள் பிரீமியம் திருமண சேவைகளை ஆராயுங்கள்.'}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`px-6 py-3 rounded-full font-medium transition ${
+                selectedCategory === category.id
+                  ? 'bg-maroon text-white'
+                  : 'bg-white text-maroon hover:bg-maroon hover:text-white border border-maroon'
+              }`}
+            >
+              {lang === 'en' ? category.en : category.ta}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredServices.map((service) => (
+            <div
+              key={service.id}
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+              onClick={() => setSelectedService(service)}
+            >
+              <div className="relative">
+                <img
+                  src={service.image}
+                  alt={service.name[lang as keyof typeof service.name]}
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute top-4 right-4 bg-gold text-maroon-dark px-3 py-1 rounded-full text-sm font-semibold">
+                  {service.price}
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-maroon mb-2">
+                  {service.name[lang as keyof typeof service.name]}
+                </h3>
+                <p className="text-gray-600 mb-4 line-clamp-2">
+                  {service.description[lang as keyof typeof service.description]}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">
+                    {lang === 'en' ? 'Click for details' : 'விவரங்களுக்கு கிளிக் செய்யவும்'}
+                  </span>
+                  <ArrowRight className="text-maroon" size={20} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

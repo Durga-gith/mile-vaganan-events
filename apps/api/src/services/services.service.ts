@@ -89,4 +89,18 @@ export class ServicesService {
 
      return booking;
   }
+
+  async createLead(data: {
+    name: string;
+    email: string;
+    phone: string;
+    date: string;
+    city: string;
+    packageType: string;
+    services: string[];
+    notes?: string;
+  }) {
+    await this.emailService.sendLeadEmail(data);
+    return { ok: true };
+  }
 }

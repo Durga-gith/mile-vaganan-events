@@ -14,4 +14,9 @@ export class ServicesController {
   createBooking(@Body() body: any) {
     return this.servicesService.createBooking(body);
   }
+
+  @Post('lead')
+  createLead(@Body() body: any) {
+    return this.servicesService.createLead(body);
+  }
 }

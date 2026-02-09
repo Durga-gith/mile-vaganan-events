@@ -14,7 +14,7 @@ export default function Hero({ lang }: { lang: string }) {
             : 'பாரம்பரிய சடங்குகள் முதல் நவீன கொண்டாட்டங்கள் வரை, உங்கள் கனவுத் திருமணத்தை நேர்த்தியுடனும் முழுமையுடனும் நிஜமாக்குகிறோம்.'}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <a href="tel:+919363345067" className="bg-gold hover:bg-gold-dark text-maroon-dark font-bold py-3 px-8 rounded-full transition flex items-center justify-center gap-2">
+          <a href="#book" className="bg-gold hover:bg-gold-dark text-maroon-dark font-bold py-3 px-8 rounded-full transition flex items-center justify-center gap-2">
             {lang === 'en' ? 'Book Now' : 'இப்போதே முன்பதிவு செய்யுங்கள்'}
             <ArrowRight size={20} />
           </a>
