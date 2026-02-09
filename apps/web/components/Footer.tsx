@@ -14,7 +14,7 @@ export default function Footer({ lang }: { lang: string }) {
             </p>
             <div className="flex space-x-4">
               <a href="#" className="hover:text-gold transition"><Facebook size={20} /></a>
-              <a href="#" className="hover:text-gold transition"><Instagram size={20} /></a>
+              <a href="https://instagram.com/mile_vaganan_events" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition"><Instagram size={20} /></a>
               <a href="#" className="hover:text-gold transition"><Twitter size={20} /></a>
             </div>
           </div>
@@ -22,14 +22,15 @@ export default function Footer({ lang }: { lang: string }) {
           <div>
             <h4 className="text-lg font-bold text-gold mb-6">{lang === 'en' ? 'Quick Links' : 'விரைவு இணைப்புகள்'}</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="hover:text-gold transition">{lang === 'en' ? 'About Us' : 'எங்களைப் பற்றி'}</a></li>
-              <li><a href="#" className="hover:text-gold transition">{lang === 'en' ? 'Services' : 'சேவைகள்'}</a></li>
-              <li><a href="#" className="hover:text-gold transition">{lang === 'en' ? 'Gallery' : 'கேலரி'}</a></li>
-              <li><a href="#" className="hover:text-gold transition">{lang === 'en' ? 'Contact' : 'தொடர்புக்கு'}</a></li>
+              <li><a href="#services" className="hover:text-gold transition">{lang === 'en' ? 'Services' : 'சேவைகள்'}</a></li>
+              <li><a href="#packages" className="hover:text-gold transition">{lang === 'en' ? 'Packages' : 'தொகுப்புகள்'}</a></li>
+              <li><a href="#offers" className="hover:text-gold transition">{lang === 'en' ? 'Offers' : 'சலுகைகள்'}</a></li>
+              <li><a href="#reviews" className="hover:text-gold transition">{lang === 'en' ? 'Reviews' : 'விமர்சனங்கள்'}</a></li>
+              <li><a href="#contact" className="hover:text-gold transition">{lang === 'en' ? 'Contact' : 'தொடர்புக்கு'}</a></li>
             </ul>
           </div>
 
-          <div>
+          <div id="contact">
             <h4 className="text-lg font-bold text-gold mb-6">{lang === 'en' ? 'Services' : 'சேவைகள்'}</h4>
             <ul className="space-y-3">
               <li><a href="#" className="hover:text-gold transition">{lang === 'en' ? 'Wedding Planning' : 'திருமண திட்டமிடல்'}</a></li>
@@ -42,13 +43,9 @@ export default function Footer({ lang }: { lang: string }) {
           <div>
             <h4 className="text-lg font-bold text-gold mb-6">{lang === 'en' ? 'Contact Us' : 'தொடர்பு கொள்ள'}</h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPinIcon className="mt-1 flex-shrink-0 text-gold" size={18} />
-                <span>123 Wedding Avenue, Chennai, Tamil Nadu, India</span>
-              </li>
               <li className="flex items-center gap-3">
                 <Phone className="flex-shrink-0 text-gold" size={18} />
-                <span>+91 98765 43210</span>
+                <span>+91 9363345067</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="flex-shrink-0 text-gold" size={18} />

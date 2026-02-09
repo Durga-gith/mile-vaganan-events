@@ -7,10 +7,12 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { en: 'Venues', ta: 'மண்டபங்கள்', href: '#' },
-    { en: 'Services', ta: 'சேவைகள்', href: '#' },
-    { en: 'Packages', ta: 'தொகுப்புகள்', href: '#' },
-    { en: 'Contact', ta: 'தொடர்புக்கு', href: '#' },
+    { en: 'Home', ta: 'முகப்பு', href: '#home' },
+    { en: 'Services', ta: 'சேவைகள்', href: '#services' },
+    { en: 'Packages', ta: 'தொகுப்புகள்', href: '#packages' },
+    { en: 'Offers', ta: 'சலுகைகள்', href: '#offers' },
+    { en: 'Reviews', ta: 'விமர்சனங்கள்', href: '#reviews' },
+    { en: 'Contact', ta: 'தொடர்புக்கு', href: '#contact' },
   ];
 
   return (
