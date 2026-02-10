@@ -23,7 +23,7 @@ export default function BookingForm({ lang }: { lang: string }) {
     e.preventDefault();
     setStatus('submitting');
     try {
-      const api = process.env.NEXT_PUBLIC_API_URL;
+      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-api.onrender.com';
       await fetch(`${api}/services/lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

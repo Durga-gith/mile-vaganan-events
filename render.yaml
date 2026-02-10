@@ -12,11 +12,6 @@ services:
         fromDatabase:
           name: mile-vaganan-db
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: mile-vaganan-redis
-          property: connectionString
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
@@ -24,7 +19,7 @@ services:
       - key: SMTP_USER
         value: milevagananevents@gmail.com
       - key: SMTP_PASS
-        value: Durga@12 # Note: Ensure this is an App Password if using 2FA
+        sync: false
       - key: ADMIN_EMAIL
         value: milevagananevents@gmail.com
     healthCheckPath: /
@@ -35,8 +30,8 @@ services:
     env: node
     plan: free
     region: singapore
-    buildCommand: npm install && npm run build --workspace=apps/web
-    startCommand: npm run start --workspace=apps/web
+    buildCommand: cd apps/web && npm install && npm run build
+    startCommand: cd apps/web && npm run start
     envVars:
       - key: NEXT_PUBLIC_API_URL
         fromService:

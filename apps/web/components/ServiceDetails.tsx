@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight, Calendar, MapPin, Users, Phone, Mail } from 'lucide-react';
 
 interface ServiceItem {
@@ -100,6 +100,12 @@ const services: ServiceItem[] = [
 export default function ServiceDetails({ lang }: { lang: string }) {
   const [selectedCategory, setSelectedCategory] = useState<string>('venues');
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('selectedCategory');
+      if (saved) setSelectedCategory(saved);
+    } catch {}
+  }, []);
 
   const categories = [
     { id: 'venues', en: 'Venues', ta: 'இடங்கள்' },
@@ -204,7 +210,7 @@ export default function ServiceDetails({ lang }: { lang: string }) {
   }
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section id="service-details" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-serif font-bold text-maroon mb-4">
