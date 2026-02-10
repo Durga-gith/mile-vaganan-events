@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json ./
 
 # Create directory structure
-RUN mkdir -p apps/api apps/web
+RUN mkdir -p apps/api
 
 # Copy workspace package.jsons
 COPY apps/api/package.json ./apps/api/
