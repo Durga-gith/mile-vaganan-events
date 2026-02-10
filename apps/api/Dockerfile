@@ -10,7 +10,6 @@ RUN mkdir -p apps/api apps/web
 
 # Copy workspace package.jsons
 COPY apps/api/package.json ./apps/api/
-COPY apps/web/package.json ./apps/web/
 
 # Install dependencies
 RUN npm install
