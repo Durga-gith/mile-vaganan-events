@@ -2,24 +2,30 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Force redeploy - Install OpenSSL for Prisma
+# Install OpenSSL for Prisma
 RUN apk add --no-cache openssl
 
-# Copy the entire repository
+# Copy everything
 COPY . .
 
-# Install dependencies from the root
+# Check where we are and where the files are
+RUN ls -la
+
+# Install dependencies
 RUN npm install
 
-# Debug: List files to confirm schema existence (will show in logs)
-RUN ls -R apps/api/prisma
-
-# Generate Prisma Client
-RUN npx prisma generate --schema=apps/api/prisma/schema.prisma
+# Find the prisma schema and generate client
+# This finds it whether we are in root or in apps/api
+RUN PRISMA_SCHEMA=$(find . -name "schema.prisma" | head -n 1) && \
+    echo "Found schema at: $PRISMA_SCHEMA" && \
+    npx prisma generate --schema=$PRISMA_SCHEMA
 
 # Build the API
-RUN npm run build --workspace=api
+# We try both root-style and local-style build
+RUN npm run build --workspace=api || (cd apps/api && npm run build) || npm run build
 
-# Expose port and start command
+# Expose port
 EXPOSE 3001
-CMD ["node", "apps/api/dist/main"]
+
+# Start command - adjusted for potential path differences
+CMD ["sh", "-c", "node apps/api/dist/main || node dist/main"]
