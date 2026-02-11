@@ -13,12 +13,20 @@ export default function ReviewForm({ lang }: { lang: string }) {
     e.preventDefault();
     setStatus('submitting');
     try {
-      const api = process.env.NEXT_PUBLIC_API_URL;
-      await fetch(`${api}/reviews`, {
+      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events.onrender.com';
+      console.log('Submitting review to:', `${api}/reviews`);
+      const response = await fetch(`${api}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, rating, comment }),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'No error details' }));
+        console.error('Review API Error:', errorData);
+        throw new Error(`Review submission failed: ${response.status}`);
+      }
+      
       setStatus('success');
       setName(''); setEmail(''); setRating(5); setComment('');
     } catch {

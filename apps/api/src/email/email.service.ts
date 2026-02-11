@@ -41,7 +41,17 @@ export class EmailService {
     // In production, these should be env vars.
     // Fallback to console logging if credentials aren't present.
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-      this.transporter = nodemailer.createTransport({
+      const isGmail = process.env.SMTP_HOST.includes('gmail.com');
+      
+      this.logger.log(`SMTP Config: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${process.env.SMTP_PORT}, Admin=${process.env.ADMIN_EMAIL}`);
+      
+      this.transporter = nodemailer.createTransport(isGmail ? {
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      } : {
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT) || 587,
         secure: process.env.SMTP_SECURE === 'true',
@@ -50,6 +60,8 @@ export class EmailService {
           pass: process.env.SMTP_PASS,
         },
       });
+      
+      this.logger.log(`SMTP Transporter initialized for ${isGmail ? 'Gmail' : process.env.SMTP_HOST}`);
     } else {
       this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
     }
@@ -132,15 +144,16 @@ export class EmailService {
 
     if (this.transporter) {
       try {
-        await this.transporter.sendMail({
+        const info = await this.transporter.sendMail({
           from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
           to: adminEmail,
           subject,
           html,
         });
-        this.logger.log(`Lead email sent to ${adminEmail}`);
+        this.logger.log(`Lead email sent successfully: ${info.messageId} to ${adminEmail}`);
       } catch (error) {
-        this.logger.error('Failed to send lead email', error);
+        this.logger.error(`Failed to send lead email: ${error.message}`, error.stack);
+        throw error;
       }
     } else {
       this.logger.log(`[MOCK LEAD EMAIL] To: ${adminEmail} - from ${details.name}`);

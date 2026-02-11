@@ -54,8 +54,8 @@ export default function Offers({ lang }: { lang: string }) {
             <li>Groom Makeup FREE</li>
             <li>Complimentary Personalized Wedding Website (bride & groom name, photos/videos, shareable link)</li>
           </ul>
-          <a href="tel:+919363345067" className="inline-block mt-6 bg-maroon text-white px-6 py-3 rounded-full hover:bg-maroon-dark">
-            {lang === 'en' ? 'Call to Claim Offer' : 'சலுகையை பெற அழைக்கவும்'}
+          <a href="mailto:milevagananevents@gmail.com" className="inline-block mt-6 bg-maroon text-white px-6 py-3 rounded-full hover:bg-maroon-dark">
+            {lang === 'en' ? 'Mail to Claim Offer' : 'சலுகையைப் பெற மின்னஞ்சல் செய்யவும்'}
           </a>
         </div>
       </div>

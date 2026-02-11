@@ -194,11 +194,11 @@ export default function ServiceDetails({ lang }: { lang: string }) {
                     {lang === 'en' ? 'Book This Service' : 'இந்த சேவையை முன்பதிவு செய்யுங்கள்'}
                   </a>
                   <a
-                    href={`tel:+919363345067`}
+                    href={`mailto:milevagananevents@gmail.com`}
                     className="bg-gold text-maroon-dark px-6 py-3 rounded-full hover:bg-gold-dark transition flex items-center gap-2"
                   >
-                    <Phone size={20} />
-                    {lang === 'en' ? 'Call Now' : 'இப்போது அழைக்கவும்'}
+                    <Mail size={20} />
+                    {lang === 'en' ? 'Mail Us Now' : 'இப்போது எங்களுக்கு மின்னஞ்சல் அனுப்புங்கள்'}
                   </a>
                 </div>
               </div>

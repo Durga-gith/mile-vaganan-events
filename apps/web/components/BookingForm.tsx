@@ -23,12 +23,20 @@ export default function BookingForm({ lang }: { lang: string }) {
     e.preventDefault();
     setStatus('submitting');
     try {
-      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-api.onrender.com';
-      await fetch(`${api}/services/lead`, {
+      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events.onrender.com';
+      console.log('Submitting to:', `${api}/services/lead`);
+      const response = await fetch(`${api}/services/lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, date, city, packageType, services, notes }),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'No error details' }));
+        console.error('API Error Response:', errorData);
+        throw new Error(`Submission failed: ${response.status} ${response.statusText}`);
+      }
+      
       setStatus('success');
       setName(''); setEmail(''); setPhone(''); setDate(''); setCity(''); setServices([]); setNotes('');
     } catch {

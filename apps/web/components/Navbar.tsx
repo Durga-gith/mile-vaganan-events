@@ -12,7 +12,7 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
     { en: 'Packages', ta: 'தொகுப்புகள்', href: '#packages' },
     { en: 'Offers', ta: 'சலுகைகள்', href: '#offers' },
     { en: 'Reviews', ta: 'விமர்சனங்கள்', href: '#reviews' },
-    { en: 'Contact', ta: 'தொடர்புக்கு', href: '#contact' },
+    { en: 'Mail Us', ta: 'மின்னஞ்சல்', href: 'mailto:milevagananevents@gmail.com' },
   ];
 
   return (
