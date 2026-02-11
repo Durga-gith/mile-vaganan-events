@@ -13,7 +13,7 @@ export default function ReviewForm({ lang }: { lang: string }) {
     e.preventDefault();
     setStatus('submitting');
     try {
-      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events.onrender.com';
+      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events-xaxq.onrender.com';
       console.log('Submitting review to:', `${api}/reviews`);
       const response = await fetch(`${api}/reviews`, {
         method: 'POST',
