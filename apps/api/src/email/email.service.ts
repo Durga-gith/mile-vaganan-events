@@ -43,13 +43,12 @@ export class EmailService {
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
       const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
       
-      // Port 587 is often more reliable on Render than 465
-      // We'll use smtp.googlemail.com as it sometimes has better routing
-      const host = 'smtp.googlemail.com';
-      const port = 587;
-      const secure = false;
+      // Port 465 (SSL) is often more stable on Render than 587
+      const host = 'smtp.gmail.com';
+      const port = 465;
+      const secure = true;
 
-      this.logger.log(`SMTP Final Attempt: Host=${host}, User=${process.env.SMTP_USER}, Port=${port}, Secure=${secure}`);
+      this.logger.log(`SMTP Connection Attempt: Host=${host}, Port=${port}, User=${process.env.SMTP_USER}`);
       
       this.transporter = nodemailer.createTransport({
         host: host,
@@ -59,29 +58,23 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        tls: {
-          // Do not fail on invalid certs (helps with some cloud network proxies)
-          rejectUnauthorized: false,
-          minVersion: 'TLSv1.2'
-        },
-        connectionTimeout: 40000, // 40 seconds
-        greetingTimeout: 40000,
+        // Force IPv4 to avoid ENETUNREACH issues on Render
+        family: 4,
+        connectionTimeout: 60000, // 1 minute
+        greetingTimeout: 60000,
         socketTimeout: 60000,
-        family: 4, // Force IPv4
         debug: true,
         logger: true,
       } as any);
 
-      // Verify connection on startup to log status immediately
+      // Verify connection on startup
       this.transporter.verify((error, success) => {
         if (error) {
-          this.logger.error('SMTP Startup Verification Failed:', error);
+          this.logger.error('SMTP Connection Failed on Startup:', error.message);
         } else {
-          this.logger.log('SMTP Server is ready - Connection Verified');
+          this.logger.log('SMTP Connection Successful - Ready to send emails');
         }
       });
-      
-      this.logger.log(`SMTP Transporter configured with fallback strategy`);
     } else {
       this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
     }
@@ -175,7 +168,7 @@ export class EmailService {
         this.logger.log(`Lead email sent successfully: ${info.messageId} to ${adminEmail}`);
       } catch (error) {
         this.logger.error(`Failed to send lead email: ${error.message}`, error.stack);
-        // Don't throw error to prevent 500 response, but log it
+        throw error; // Re-throw so the backend returns a 500 and we know it failed
       }
     } else {
       this.logger.log(`[MOCK LEAD EMAIL] To: ${adminEmail} - from ${details.name}`);
