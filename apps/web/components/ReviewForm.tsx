@@ -8,10 +8,12 @@ export default function ReviewForm({ lang }: { lang: string }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
+    setErrorMessage('');
     try {
       const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events-xaxq.onrender.com';
       console.log('Submitting review to:', `${api}/reviews`);
@@ -20,17 +22,21 @@ export default function ReviewForm({ lang }: { lang: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, rating, comment }),
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'No error details' }));
-        console.error('Review API Error:', errorData);
-        throw new Error(`Review submission failed: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
-      
+
       setStatus('success');
-      setName(''); setEmail(''); setRating(5); setComment('');
-    } catch {
+      setName('');
+      setEmail('');
+      setRating(5);
+      setComment('');
+    } catch (err: any) {
+      console.error('Review submission error:', err);
       setStatus('error');
+      setErrorMessage(err.message || 'Unknown error');
     }
   };
 
@@ -62,8 +68,16 @@ export default function ReviewForm({ lang }: { lang: string }) {
           <button type="submit" className="bg-maroon text-white px-6 py-3 rounded-full hover:bg-maroon-dark transition" disabled={status==='submitting'}>
             {status==='submitting' ? (lang==='en' ? 'Submitting...' : 'சமர்ப்பிக்கிறது...') : (lang==='en' ? 'Submit Review' : 'விமர்சனத்தை சமர்ப்பிக்கவும்')}
           </button>
-          {status==='success' && <p className="text-green-700 mt-2">{lang==='en' ? 'Thank you! Review submitted.' : 'நன்றி! உங்கள் விமர்சனம் சமர்ப்பிக்கப்பட்டது.'}</p>}
-          {status==='error' && <p className="text-red-700 mt-2">{lang==='en' ? 'Failed to submit. Try again.' : 'சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.'}</p>}
+          {status === 'success' && (
+            <p className="text-green-600 font-medium text-center mt-2">
+              {lang === 'en' ? 'Thank you for your review!' : 'உங்கள் கருத்திற்கு நன்றி!'}
+            </p>
+          )}
+          {status === 'error' && (
+            <p className="text-red-600 font-medium text-center mt-2">
+              {lang === 'en' ? `Failed to submit: ${errorMessage}` : `சமர்ப்பிக்க முடியவில்லை: ${errorMessage}`}
+            </p>
+          )}
         </form>
       </div>
     </section>
