@@ -2,10 +2,17 @@ import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import * as dns from 'node:dns';
 
-// Force IPv4 globally for the Node process to resolve ENETUNREACH on Render
+// FORCE IPv4 ONLY - Render network does not support IPv6 routing for external SMTP
 if (typeof dns.setDefaultResultOrder === 'function') {
   dns.setDefaultResultOrder('ipv4first');
 }
+
+// Additional lookup check to log what the environment sees
+dns.lookup('smtp.gmail.com', (err, address, family) => {
+  const logger = new Logger('DNSCheck');
+  if (err) logger.error(`DNS Lookup Failed: ${err.message}`);
+  else logger.log(`DNS Lookup: smtp.gmail.com resolved to ${address} (IPv${family})`);
+});
 
 interface BookingDetails {
   bookingId: string;
