@@ -54,10 +54,11 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        connectionTimeout: 15000,
-        greetingTimeout: 15000,
-        socketTimeout: 20000,
-        dnsV6Order: false, // Prefer IPv4
+        connectionTimeout: 20000,
+        greetingTimeout: 20000,
+        socketTimeout: 30000,
+        // Strictly enforce IPv4 to resolve ENETUNREACH on Render
+        family: 4,
       };
 
       this.transporter = nodemailer.createTransport(transportOptions);
@@ -149,6 +150,7 @@ export class EmailService {
         const info = await this.transporter.sendMail({
           from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
           to: adminEmail,
+          replyTo: details.email, // Allow admin to reply directly to the customer
           subject,
           html,
         });
