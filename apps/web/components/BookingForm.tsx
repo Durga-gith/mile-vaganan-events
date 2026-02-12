@@ -19,9 +19,13 @@ export default function BookingForm({ lang }: { lang: string }) {
     setStatus('submitting');
     setErrorMessage('');
     try {
-      const api = process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events-xaxq.onrender.com';
-      console.log('Submitting to:', `${api}/services/lead`);
-      const response = await fetch(`${api}/services/lead`, {
+      // Use the environment variable, but remove any trailing slashes to be safe
+      const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events-xaxq.onrender.com').replace(/\/$/, '');
+      const apiUrl = `${apiBase}/services/lead`;
+      
+      console.log('Submitting lead to:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, date, city, packageType, services, notes }),
