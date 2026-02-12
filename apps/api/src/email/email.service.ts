@@ -1,5 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import * as dns from 'node:dns';
+
+// Force IPv4 globally for the Node process to resolve ENETUNREACH on Render
+if (typeof dns.setDefaultResultOrder === 'function') {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 interface BookingDetails {
   bookingId: string;
@@ -43,32 +49,31 @@ export class EmailService {
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
       const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
       
-      // Port 465 (SSL) is often more stable on Render than 587
+      // We are switching back to 587 but with stricter TLS and IPv4 forcing
+      // Port 465 failed on both IPv4 and IPv6 in previous logs
       const host = 'smtp.gmail.com';
-      const port = 465;
-      const secure = true;
+      const port = 587;
+      const secure = false;
 
-      this.logger.log(`SMTP Connection Attempt: Host=${host}, Port=${port}, User=${process.env.SMTP_USER}`);
+      this.logger.log(`SMTP Ultimate Strategy: Host=${host}, Port=${port}, User=${process.env.SMTP_USER}`);
+      this.logger.log(`SMTP Pass Length: ${smtpPass.length} characters`);
       
       this.transporter = nodemailer.createTransport({
         host: host,
         port: port,
         secure: secure,
+        requireTLS: true,
         auth: {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        // Force IPv4
+        // Force IPv4 again here
         family: 4,
         tls: {
-          // Essential for some cloud environments
+          // Some cloud providers need this to bypass certificate issues in their proxy
           rejectUnauthorized: false,
           minVersion: 'TLSv1.2'
         },
-        // Connection settings
-        pool: true,
-        maxConnections: 3,
-        maxMessages: 100,
         connectionTimeout: 60000,
         greetingTimeout: 60000,
         socketTimeout: 60000,
