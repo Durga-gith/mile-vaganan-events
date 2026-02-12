@@ -32,9 +32,9 @@ export default function BookingForm({ lang }: { lang: string }) {
       });
       
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'No error details' }));
-        console.error('API Error Response:', errorData);
-        throw new Error(`Submission failed: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`Submission failed: ${response.status} - ${errorText}`);
       }
       
       setStatus('success');

@@ -42,6 +42,7 @@ export class EmailService {
     // Fallback to console logging if credentials aren't present.
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
       const isGmail = process.env.SMTP_HOST.includes('gmail.com');
+      const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
       
       this.logger.log(`SMTP Config: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${process.env.SMTP_PORT}, Admin=${process.env.ADMIN_EMAIL}`);
       
@@ -49,7 +50,7 @@ export class EmailService {
         service: 'gmail',
         auth: {
           user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          pass: smtpPass,
         },
       } : {
         host: process.env.SMTP_HOST,
@@ -57,7 +58,7 @@ export class EmailService {
         secure: process.env.SMTP_SECURE === 'true',
         auth: {
           user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          pass: smtpPass,
         },
       });
       
@@ -144,8 +145,9 @@ export class EmailService {
 
     if (this.transporter) {
       try {
+        this.logger.log(`Attempting to send lead email from ${process.env.SMTP_USER} to ${adminEmail}`);
         const info = await this.transporter.sendMail({
-          from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
+          from: process.env.SMTP_USER,
           to: adminEmail,
           subject,
           html,
