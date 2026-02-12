@@ -41,24 +41,15 @@ export class EmailService {
     // In production, these should be env vars.
     // Fallback to console logging if credentials aren't present.
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-      const isGmail = process.env.SMTP_HOST.includes('gmail.com');
       const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
       
       this.logger.log(`SMTP Config: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${process.env.SMTP_PORT}, Admin=${process.env.ADMIN_EMAIL}`);
       
-      this.transporter = nodemailer.createTransport(isGmail ? {
-        service: 'gmail',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: smtpPass,
-        },
-        connectionTimeout: 10000, // 10 seconds
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
-      } : {
+      // Use manual configuration instead of 'service: gmail' for better compatibility on Render
+      this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === 'true',
+        secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
         auth: {
           user: process.env.SMTP_USER,
           pass: smtpPass,
@@ -68,7 +59,7 @@ export class EmailService {
         socketTimeout: 15000,
       });
       
-      this.logger.log(`SMTP Transporter initialized for ${isGmail ? 'Gmail' : process.env.SMTP_HOST}`);
+      this.logger.log(`SMTP Transporter initialized for ${process.env.SMTP_HOST}`);
     } else {
       this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
     }
