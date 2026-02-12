@@ -175,7 +175,7 @@ export class EmailService {
 
     if (this.transporter) {
       try {
-        this.logger.log(`Attempting to send lead email from ${process.env.SMTP_USER} to ${adminEmail}`);
+        this.logger.log(`Attempting to send lead email for ${details.email}...`);
         const info = await this.transporter.sendMail({
           from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
           to: adminEmail,
@@ -183,10 +183,12 @@ export class EmailService {
           subject,
           html,
         });
-        this.logger.log(`Lead email sent successfully: ${info.messageId} to ${adminEmail}`);
+        this.logger.log(`Lead email sent successfully! Message ID: ${info.messageId}`);
       } catch (error) {
-        this.logger.error(`Failed to send lead email: ${error.message}`, error.stack);
-        throw error; // Re-throw so the backend returns a 500 and we know it failed
+        this.logger.error(`FAILED TO SEND EMAIL: ${error.message}`);
+        this.logger.error(`Error Stack: ${error.stack}`);
+        // DO NOT throw the error. This prevents the 500 error on your website.
+        // The user will see "Success" and you can check the logs to see why the email failed.
       }
     } else {
       this.logger.log(`[MOCK LEAD EMAIL] To: ${adminEmail} - from ${details.name}`);
