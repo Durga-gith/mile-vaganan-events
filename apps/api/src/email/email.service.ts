@@ -52,6 +52,9 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
+        connectionTimeout: 10000, // 10 seconds
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
       } : {
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT) || 587,
@@ -60,6 +63,9 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
       });
       
       this.logger.log(`SMTP Transporter initialized for ${isGmail ? 'Gmail' : process.env.SMTP_HOST}`);
