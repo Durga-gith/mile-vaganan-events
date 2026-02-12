@@ -58,21 +58,34 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        // Force IPv4 to avoid ENETUNREACH issues on Render
+        // Force IPv4
         family: 4,
-        connectionTimeout: 60000, // 1 minute
+        tls: {
+          // Essential for some cloud environments
+          rejectUnauthorized: false,
+          minVersion: 'TLSv1.2'
+        },
+        // Connection settings
+        pool: true,
+        maxConnections: 3,
+        maxMessages: 100,
+        connectionTimeout: 60000,
         greetingTimeout: 60000,
         socketTimeout: 60000,
         debug: true,
         logger: true,
       } as any);
 
-      // Verify connection on startup
+      // Detailed verification
       this.transporter.verify((error, success) => {
         if (error) {
-          this.logger.error('SMTP Connection Failed on Startup:', error.message);
+          const err = error as any;
+          this.logger.error('SMTP VERIFICATION FAILED! Details:');
+          this.logger.error(`Code: ${err.code}`);
+          this.logger.error(`Message: ${err.message}`);
+          this.logger.error(`Stack: ${err.stack}`);
         } else {
-          this.logger.log('SMTP Connection Successful - Ready to send emails');
+          this.logger.log('SMTP CONNECTION SUCCESSFUL - Ready to send emails');
         }
       });
     } else {

@@ -17,6 +17,7 @@ export class ServicesController {
 
   @Post('lead')
   createLead(@Body() body: any) {
+    console.log('Received lead request:', body.email);
     return this.servicesService.createLead(body);
   }
 }
