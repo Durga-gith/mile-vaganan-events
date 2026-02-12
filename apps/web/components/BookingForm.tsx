@@ -84,72 +84,72 @@ export default function BookingForm({ lang }: { lang: string }) {
 
   return (
     <div id="book" className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 -mt-24 relative z-10 border border-gold/20">
-      <h2 className="text-3xl font-serif font-bold text-wine mb-8 text-center">{t.title}</h2>
+      <h2 className="text-3xl font-serif font-bold text-maroon mb-8 text-center">{t.title}</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.name}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.name}</label>
             <input
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.email}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.email}</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.phone}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.phone}</label>
             <input
               type="tel"
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.date}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.date}</label>
             <input
               type="date"
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.city}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.city}</label>
             <input
               type="text"
               required
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.package}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.package}</label>
             <select
               value={packageType}
               onChange={(e) => setPackageType(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
             >
               <option value="Basic">Basic</option>
               <option value="Premium">Premium</option>
@@ -158,7 +158,7 @@ export default function BookingForm({ lang }: { lang: string }) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-wine mb-1">{t.services}</label>
+            <label className="block text-sm font-medium text-maroon mb-1">{t.services}</label>
             <div className="grid grid-cols-2 gap-2">
               {['Venues', 'Catering', 'Decoration', 'Photography', 'Entertainment', 'Planning'].map((service) => (
                 <label key={service} className="flex items-center space-x-2 text-sm">
@@ -169,7 +169,7 @@ export default function BookingForm({ lang }: { lang: string }) {
                       if (e.target.checked) setServices([...services, service]);
                       else setServices(services.filter(s => s !== service));
                     }}
-                    className="rounded border-gold/30 text-wine focus:ring-wine"
+                    className="rounded border-gold/30 text-maroon focus:ring-maroon"
                   />
                   <span>{service}</span>
                 </label>
@@ -179,19 +179,19 @@ export default function BookingForm({ lang }: { lang: string }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-wine mb-1">{t.notes}</label>
+          <label className="block text-sm font-medium text-maroon mb-1">{t.notes}</label>
           <textarea
             rows={4}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-wine focus:border-transparent"
+            className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
           />
         </div>
 
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="w-full md:w-auto px-8 py-3 bg-wine text-white rounded-full font-bold hover:bg-wine/90 transition-colors disabled:bg-gray-400"
+          className="w-full md:w-auto px-8 py-3 bg-maroon text-white rounded-full font-bold hover:bg-maroon/90 transition-colors disabled:bg-gray-400"
         >
           {status === 'submitting' ? '...' : t.submit}
         </button>

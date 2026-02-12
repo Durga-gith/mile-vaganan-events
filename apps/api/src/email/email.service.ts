@@ -147,7 +147,7 @@ export class EmailService {
       try {
         this.logger.log(`Attempting to send lead email from ${process.env.SMTP_USER} to ${adminEmail}`);
         const info = await this.transporter.sendMail({
-          from: process.env.SMTP_USER,
+          from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
           to: adminEmail,
           subject,
           html,
@@ -155,7 +155,7 @@ export class EmailService {
         this.logger.log(`Lead email sent successfully: ${info.messageId} to ${adminEmail}`);
       } catch (error) {
         this.logger.error(`Failed to send lead email: ${error.message}`, error.stack);
-        throw error;
+        // Don't throw error to prevent 500 response, but log it
       }
     } else {
       this.logger.log(`[MOCK LEAD EMAIL] To: ${adminEmail} - from ${details.name}`);
