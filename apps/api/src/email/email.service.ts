@@ -42,14 +42,15 @@ export class EmailService {
     // Fallback to console logging if credentials aren't present.
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
       const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
+      const port = Number(process.env.SMTP_PORT) || 465;
+      const secure = process.env.SMTP_SECURE === 'true' || port === 465;
+
+      this.logger.log(`SMTP Initialization: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${port}, Secure=${secure}`);
       
-      this.logger.log(`SMTP Config: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${process.env.SMTP_PORT}, Admin=${process.env.ADMIN_EMAIL}`);
-      
-      // Use manual configuration instead of 'service: gmail' for better compatibility on Render
-      const transportOptions: any = {
+      this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
+        port: port,
+        secure: secure,
         auth: {
           user: process.env.SMTP_USER,
           pass: smtpPass,
@@ -57,13 +58,12 @@ export class EmailService {
         connectionTimeout: 20000,
         greetingTimeout: 20000,
         socketTimeout: 30000,
-        // Strictly enforce IPv4 to resolve ENETUNREACH on Render
-        family: 4,
-      };
-
-      this.transporter = nodemailer.createTransport(transportOptions);
+        family: 4, // Strictly force IPv4
+        debug: true, // This will show the handshake in Render logs
+        logger: true, // This will show detailed logs in Render console
+      } as any);
       
-      this.logger.log(`SMTP Transporter initialized for ${process.env.SMTP_HOST}`);
+      this.logger.log(`SMTP Transporter configured for ${process.env.SMTP_HOST}`);
     } else {
       this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
     }
