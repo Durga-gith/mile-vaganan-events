@@ -46,7 +46,7 @@ export class EmailService {
       this.logger.log(`SMTP Config: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${process.env.SMTP_PORT}, Admin=${process.env.ADMIN_EMAIL}`);
       
       // Use manual configuration instead of 'service: gmail' for better compatibility on Render
-      this.transporter = nodemailer.createTransport({
+      const transportOptions: any = {
         host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT) || 587,
         secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
@@ -54,10 +54,13 @@ export class EmailService {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
-      });
+        connectionTimeout: 15000,
+        greetingTimeout: 15000,
+        socketTimeout: 20000,
+        dnsV6Order: false, // Prefer IPv4
+      };
+
+      this.transporter = nodemailer.createTransport(transportOptions);
       
       this.logger.log(`SMTP Transporter initialized for ${process.env.SMTP_HOST}`);
     } else {
