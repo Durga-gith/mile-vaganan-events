@@ -42,28 +42,46 @@ export class EmailService {
     // Fallback to console logging if credentials aren't present.
     if (process.env.SMTP_HOST && process.env.SMTP_USER) {
       const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
-      const port = Number(process.env.SMTP_PORT) || 465;
-      const secure = process.env.SMTP_SECURE === 'true' || port === 465;
+      
+      // Port 587 is often more reliable on Render than 465
+      // We'll use smtp.googlemail.com as it sometimes has better routing
+      const host = 'smtp.googlemail.com';
+      const port = 587;
+      const secure = false;
 
-      this.logger.log(`SMTP Initialization: Host=${process.env.SMTP_HOST}, User=${process.env.SMTP_USER}, Port=${port}, Secure=${secure}`);
+      this.logger.log(`SMTP Final Attempt: Host=${host}, User=${process.env.SMTP_USER}, Port=${port}, Secure=${secure}`);
       
       this.transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
+        host: host,
         port: port,
         secure: secure,
         auth: {
           user: process.env.SMTP_USER,
           pass: smtpPass,
         },
-        connectionTimeout: 20000,
-        greetingTimeout: 20000,
-        socketTimeout: 30000,
-        family: 4, // Strictly force IPv4
-        debug: true, // This will show the handshake in Render logs
-        logger: true, // This will show detailed logs in Render console
+        tls: {
+          // Do not fail on invalid certs (helps with some cloud network proxies)
+          rejectUnauthorized: false,
+          minVersion: 'TLSv1.2'
+        },
+        connectionTimeout: 40000, // 40 seconds
+        greetingTimeout: 40000,
+        socketTimeout: 60000,
+        family: 4, // Force IPv4
+        debug: true,
+        logger: true,
       } as any);
+
+      // Verify connection on startup to log status immediately
+      this.transporter.verify((error, success) => {
+        if (error) {
+          this.logger.error('SMTP Startup Verification Failed:', error);
+        } else {
+          this.logger.log('SMTP Server is ready - Connection Verified');
+        }
+      });
       
-      this.logger.log(`SMTP Transporter configured for ${process.env.SMTP_HOST}`);
+      this.logger.log(`SMTP Transporter configured with fallback strategy`);
     } else {
       this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
     }
