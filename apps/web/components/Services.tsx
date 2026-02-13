@@ -47,7 +47,7 @@ export default function Services({ lang }: { lang: string }) {
     decoration: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Elegant decoration
     photography: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Wedding photography
     entertainment: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Live music
-    planning: 'https://images.unsplash.com/photo-1519222970733-f746153fe785?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' // Wedding planning coordination
+    planning: 'https://images.unsplash.com/photo-1517457373958-b7bdd058a548?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' // Professional event planning
   };
 
   return (
@@ -73,9 +73,20 @@ export default function Services({ lang }: { lang: string }) {
             transition={{ delay: 0.1 }}
             className="section-title"
           >
-            {lang === 'en' ? 'Venue Inspirations' : 'திருமண இடங்கள்'}
+            {lang === 'en' ? 'Wedding Design Concepts' : 'திருமண வடிவமைப்பு கருத்துக்கள்'}
           </motion.h2>
-          <p className="text-gray-500 mt-4 italic text-sm">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-600 max-w-2xl mx-auto mt-4"
+          >
+            {lang === 'en' 
+              ? 'Explore beautiful wedding styles and inspirations we can bring to life for your special day.' 
+              : 'உங்கள் சிறப்பு நாளுக்காக நாங்கள் உயிர் கொடுக்கக்கூடிய அழகான திருமண பாணிகள் மற்றும் உத்வேகங்களை ஆராயுங்கள்.'}
+          </motion.p>
+          <p className="text-gray-400 mt-2 italic text-[10px] uppercase tracking-widest">
             {lang === 'en' ? '*Images are for representation purposes only' : '*படங்கள் விளக்கத்திற்காக மட்டுமே'}
           </p>
         </div>
