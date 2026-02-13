@@ -55,22 +55,30 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center px-8 z-10"
+            className="flex flex-col items-center justify-center px-4 md:px-12 z-10"
           >
-            <img 
-              src="/logo.jpg" 
-              alt="Mile Vaganan Events Logo" 
-              className={`transition-all duration-500 ${scrolled ? 'h-16 w-16' : 'h-20 w-20'} object-contain mb-1`}
-              onError={(e) => {
-                // Fallback if logo doesn't exist yet
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-            <span className={`text-xl md:text-2xl font-bold font-serif tracking-tighter transition-colors duration-300 text-center leading-none ${
-              scrolled ? 'text-maroon' : 'text-ivory'
-            }`}>
-              Mile <span className="text-gold">Vaganan</span><br className="md:hidden" /> Events
-            </span>
+            <div className={`relative transition-all duration-500 ${scrolled ? 'h-14 w-14' : 'h-20 w-20'} mb-2`}>
+              <img 
+                src="/logo.jpg" 
+                alt="Mile Vaganan Events Logo" 
+                className="h-full w-full object-contain rounded-full shadow-lg border-2 border-gold/20"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+            <div className="flex flex-col items-center">
+              <span className={`text-lg md:text-2xl font-bold font-serif tracking-tighter transition-colors duration-300 text-center leading-tight ${
+                scrolled ? 'text-maroon' : 'text-ivory'
+              }`}>
+                Mile <span className="text-gold">Vaganan</span>
+              </span>
+              <span className={`text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
+                scrolled ? 'text-maroon/60' : 'text-gold-light'
+              }`}>
+                Events
+              </span>
+            </div>
           </motion.div>
           
           {/* Desktop Right Nav */}

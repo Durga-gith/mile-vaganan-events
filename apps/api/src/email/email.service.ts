@@ -39,10 +39,13 @@ export class EmailService {
   private readonly logoUrl = 'https://mile-vaganan-events.vercel.app/logo.jpg';
 
   private readonly emailHeader = `
-    <div style="text-align: center; margin-bottom: 30px; padding: 20px; background-color: #800000;">
-      <img src="${this.logoUrl}" alt="Mile Vaganan Events" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;" />
-      <h1 style="color: #d4af37; margin: 0; font-family: 'Playfair Display', serif; font-size: 24px;">Mile Vaganan Events</h1>
-      <p style="color: #fffaf0; margin: 5px 0 0; font-style: italic; font-size: 14px;">Crafting Royal Weddings</p>
+    <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background-color: #800000; background-image: linear-gradient(to bottom, #800000, #600000);">
+      <div style="display: inline-block; padding: 10px; background: white; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <img src="${this.logoUrl}" alt="Mile Vaganan Events" style="width: 80px; height: 80px; object-fit: contain; display: block;" />
+      </div>
+      <h1 style="color: #d4af37; margin: 0; font-family: 'Playfair Display', serif; font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">Mile Vaganan Events</h1>
+      <div style="width: 50px; hieght: 2px; background: #d4af37; margin: 15px auto;"></div>
+      <p style="color: #fffaf0; margin: 0; font-style: italic; font-size: 16px; font-family: 'Georgia', serif;">Crafting Royal Weddings & Memorable Events</p>
     </div>
   `;
 
@@ -144,7 +147,7 @@ export class EmailService {
             `).join('')}
           </table>
 
-          <p style="margin-top: 30px;">Our team will contact you shortly to discuss the next steps.</p>
+          <p style="margin-top: 30px;">We will contact you soon by <strong>milevagananevents@gmail.com</strong> to discuss the next steps for your royal event.</p>
           
           <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #d4af37; color: #666; font-size: 12px;">
             <p>Mile Vaganan Events | milevagananevents@gmail.com</p>
@@ -244,28 +247,41 @@ export class EmailService {
 
   async sendReviewEmail(details: ReviewDetails) {
     const adminEmail = process.env.ADMIN_EMAIL || 'milevagananevents@gmail.com';
-    const subject = `New Customer Review: ${details.name} (${details.rating}/5)`;
+    const subject = `New Royal Review: ${details.rating} Stars from ${details.name}`;
     
     // Add option to approve to site
     const approveUrl = `https://mile-vaganan-events-xaxq.onrender.com/reviews/approve?email=${details.email}&name=${encodeURIComponent(details.name)}`;
 
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #d4af37; padding: 0;">
+      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
         ${this.emailHeader}
-        <div style="padding: 20px;">
-          <h2 style="color: #800000; text-align: center;">New Customer Review</h2>
-          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-            <p><strong>Name:</strong> ${details.name}</p>
-            ${details.email ? `<p><strong>Email:</strong> ${details.email}</p>` : ''}
-            <p><strong>Rating:</strong> ${details.rating}/5</p>
-            <p><strong>Comment:</strong><br/>${details.comment}</p>
+        <div style="padding: 30px;">
+          <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #d4af37; padding-bottom: 10px;">New Customer Review</h2>
+          
+          <div style="background-color: #fff; padding: 25px; border: 1px solid #d4af37; border-radius: 4px; margin: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <div style="text-align: center; margin-bottom: 15px;">
+              <span style="color: #d4af37; font-size: 24px;">${'★'.repeat(details.rating)}${'☆'.repeat(5 - details.rating)}</span>
+            </div>
+            <p style="margin: 5px 0;"><strong>Customer:</strong> ${details.name}</p>
+            ${details.email ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${details.email}</p>` : ''}
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #d4af37;">
+              <p style="font-style: italic; color: #444; line-height: 1.6; font-size: 16px;">"${details.comment}"</p>
+            </div>
           </div>
           
-          <div style="text-align: center; margin-top: 30px;">
-            <p>Would you like to feature this review on your website?</p>
-            <a href="${approveUrl}" style="background-color: #d4af37; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-              Add Customer Details to Site
+          <div style="text-align: center; margin-top: 35px; background-color: #fcf8e3; padding: 25px; border-radius: 8px; border: 1px solid #faebcc;">
+            <p style="margin-bottom: 20px; font-weight: bold; color: #800000; font-size: 18px;">Display this review on your website?</p>
+            <a href="${approveUrl}" style="background-color: #800000; color: #d4af37; padding: 16px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; border: 2px solid #d4af37; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;">
+              Approve & Add to Website
             </a>
+            ${details.email ? `
+            <div style="margin-top: 20px;">
+              <a href="mailto:${details.email}" style="color: #800000; text-decoration: underline; font-size: 14px;">Contact customer directly</a>
+            </div>` : ''}
+          </div>
+          
+          <div style="text-align: center; margin-top: 40px; color: #666; font-size: 12px; border-top: 1px solid #d4af37; padding-top: 20px;">
+            <p>© 2026 Mile Vaganan Events | milevagananevents@gmail.com</p>
           </div>
         </div>
       </div>
@@ -274,7 +290,7 @@ export class EmailService {
     if (this.resend) {
       try {
         await this.resend.emails.send({
-          from: 'Mile Vaganan <onboarding@resend.dev>',
+          from: 'Mile Vaganan Admin <onboarding@resend.dev>',
           to: adminEmail,
           subject,
           html,

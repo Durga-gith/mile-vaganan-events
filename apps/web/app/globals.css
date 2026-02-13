@@ -52,33 +52,30 @@
   }
 
   .corner-gif {
-    @apply fixed w-[180px] z-[9999] pointer-events-none opacity-95 transition-all duration-700;
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
-    mix-blend-mode: multiply; /* Helps remove white background from GIFs */
+    @apply fixed w-[140px] z-[9999] pointer-events-none opacity-90 transition-all duration-700;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
   }
   
   .top-left { 
-    @apply top-[-20px] left-[-20px]; 
+    @apply top-0 left-0; 
   }
   
   .top-right { 
-    @apply top-[-20px] right-[-20px]; 
+    @apply top-0 right-0; 
   }
   
   .bottom-left { 
-    @apply bottom-[-10px] left-[-10px]; 
+    @apply bottom-0 left-0; 
   }
   
   .bottom-right { 
-    @apply bottom-[-10px] right-[-10px]; 
+    @apply bottom-0 right-0; 
   }
 
   @media (max-width: 768px) {
     .corner-gif {
-      @apply w-[100px];
+      @apply w-[80px];
     }
-    .top-left, .top-right { @apply top-[-10px]; }
-    .bottom-left, .bottom-right { @apply bottom-[-5px]; }
   }
 }
 

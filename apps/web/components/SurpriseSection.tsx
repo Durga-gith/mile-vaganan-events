@@ -142,32 +142,32 @@ export default function SurpriseSection({ lang }: { lang: string }) {
           >
             {/* Left Curtain */}
             <motion.div
-              animate={isOpen ? { x: "-100%", rotateY: -20 } : { x: "0%", rotateY: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="relative w-1/2 h-full bg-[#800000] border-r-2 border-gold shadow-[inset_-20px_0_40px_rgba(0,0,0,0.5)] flex flex-col justify-between p-4"
+              animate={isOpen ? { x: "-100%", rotateY: -30, opacity: 0 } : { x: "0%", rotateY: 0, opacity: 1 }}
+              transition={{ duration: 2, ease: [0.45, 0.05, 0.55, 0.95] }}
+              className="relative w-1/2 h-full bg-[#800000] border-r-4 border-gold/40 shadow-[inset_-30px_0_60px_rgba(0,0,0,0.7),10px_0_30px_rgba(0,0,0,0.5)] flex flex-col justify-between overflow-hidden"
               style={{
-                backgroundImage: `repeating-linear-gradient(90deg, #800000, #800000 20px, #700000 21px, #700000 40px)`,
-                transformOrigin: "left"
+                backgroundImage: `url('https://www.transparenttextures.com/patterns/royal-lineage.png'), repeating-linear-gradient(90deg, #800000, #800000 30px, #700000 31px, #700000 60px)`,
+                transformOrigin: "left center"
               }}
             >
-              <div className="h-full w-full border-2 border-gold/30 rounded-sm opacity-20" />
-              {/* Golden Tassel/Border */}
-              <div className="absolute right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-gold-light via-gold to-gold-dark" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-transparent pointer-events-none" />
+              {/* Decorative Border */}
+              <div className="absolute right-0 top-0 bottom-0 w-2 bg-gradient-to-b from-gold-light via-gold to-gold-dark shadow-lg" />
             </motion.div>
 
             {/* Right Curtain */}
             <motion.div
-              animate={isOpen ? { x: "100%", rotateY: 20 } : { x: "0%", rotateY: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="relative w-1/2 h-full bg-[#800000] border-l-2 border-gold shadow-[inset_20px_0_40px_rgba(0,0,0,0.5)] flex flex-col justify-between p-4"
+              animate={isOpen ? { x: "100%", rotateY: 30, opacity: 0 } : { x: "0%", rotateY: 0, opacity: 1 }}
+              transition={{ duration: 2, ease: [0.45, 0.05, 0.55, 0.95] }}
+              className="relative w-1/2 h-full bg-[#800000] border-l-4 border-gold/40 shadow-[inset_30px_0_60px_rgba(0,0,0,0.7),-10px_0_30px_rgba(0,0,0,0.5)] flex flex-col justify-between overflow-hidden"
               style={{
-                backgroundImage: `repeating-linear-gradient(90deg, #800000, #800000 20px, #700000 21px, #700000 40px)`,
-                transformOrigin: "right"
+                backgroundImage: `url('https://www.transparenttextures.com/patterns/royal-lineage.png'), repeating-linear-gradient(90deg, #800000, #800000 30px, #700000 31px, #700000 60px)`,
+                transformOrigin: "right center"
               }}
             >
-              <div className="h-full w-full border-2 border-gold/30 rounded-sm opacity-20" />
-              {/* Golden Tassel/Border */}
-              <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-gold-light via-gold to-gold-dark" />
+              <div className="absolute inset-0 bg-gradient-to-l from-black/20 via-transparent to-transparent pointer-events-none" />
+              {/* Decorative Border */}
+              <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-gold-light via-gold to-gold-dark shadow-lg" />
             </motion.div>
           </motion.div>
         </div>
