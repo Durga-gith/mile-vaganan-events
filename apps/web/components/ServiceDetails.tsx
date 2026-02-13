@@ -119,7 +119,7 @@ const services: ServiceItem[] = [
       ta: 'மன அழுத்தமில்லாத ராஜகம்பீர கொண்டாட்டத்திற்கான முழுமையான திருமணத் திட்டமிடல் மற்றும் மேலாண்மை சேவைகள்.'
     },
     price: 'For prices contact us',
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1519222970733-f746153fe785?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     features: {
       en: ['Budget management', 'Vendor coordination', 'Timeline planning', 'Guest hospitality', 'On-day support'],
       ta: ['பட்ஜெட் மேலாண்மை', 'விற்பனையாளர் ஒருங்கிணைப்பு', 'திட்டமிடல்', 'விருந்தினர் உபசரிப்பு', 'திருமண நாள் ஆதரவு']
