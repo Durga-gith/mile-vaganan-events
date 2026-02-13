@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Flower = ({ side }: { side: 'left' | 'right' }) => {
   const [delay] = useState(Math.random() * 5);
@@ -56,56 +56,6 @@ export default function CornerAnimations() {
       <div className="absolute top-0 right-0 w-64 h-full overflow-hidden opacity-40">
         {[...Array(15)].map((_, i) => <Flower key={`r-${i}`} side="right" />)}
       </div>
-
-      {/* Top Left - Lakshmi Blessing */}
-      <motion.div 
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 0.9, x: 0 }}
-        transition={{ duration: 1.5, delay: 0.5 }}
-        className="corner-gif top-left"
-      >
-        <img src="/left.jpg" alt="Lakshmi Blessing" className="w-full h-auto" />
-      </motion.div>
-
-      {/* Top Right - Lakshmi Blessing */}
-      <motion.div 
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 0.9, x: 0 }}
-        transition={{ duration: 1.5, delay: 0.8 }}
-        className="corner-gif top-right"
-      >
-        <img src="/right.jpg" alt="Lakshmi Blessing" className="w-full h-auto" />
-      </motion.div>
-
-      {/* Bottom Left - Lakshmi Blessing (Optional additional) */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 0.8, scale: 1 }}
-        transition={{ duration: 2, delay: 1.2 }}
-        className="corner-gif bottom-left"
-      >
-        <img src="/left.jpg" alt="Lakshmi Blessing" className="w-full h-auto" />
-      </motion.div>
-
-      {/* Bottom Right - Elephant Blessing */}
-      <motion.img
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-        animate={{ 
-          opacity: 1, 
-          scale: 1, 
-          y: [0, 5, 0],
-          rotate: [0, 2, 0]
-        }}
-        transition={{ 
-          opacity: { duration: 1.5, delay: 1.4 },
-          scale: { duration: 1.5, delay: 1.4 },
-          y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-          rotate: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-        }}
-        src="/images/animations/happy-elephant-right.gif"
-        alt="Elephant Blessing"
-        className="corner-gif bottom-right"
-      />
     </div>
   );
 }
