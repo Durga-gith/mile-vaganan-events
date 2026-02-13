@@ -8,7 +8,7 @@ export default function Offers({ lang }: { lang: string }) {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="bg-ivory p-6 rounded-lg shadow">
             <h3 className="text-xl font-bold text-maroon mb-2">Basic</h3>
-            <p className="text-gray-700 mb-4">₹3 – ₹5 Lakhs</p>
+            <p className="text-gray-700 mb-4 font-semibold">{lang === 'en' ? 'Contact us for pricing' : 'விலை விவரங்களுக்கு எங்களை தொடர்பு கொள்ளவும்'}</p>
             <ul className="text-gray-700 space-y-2">
               <li>Hall</li>
               <li>Veg Catering (300 pax)</li>
@@ -19,7 +19,7 @@ export default function Offers({ lang }: { lang: string }) {
           </div>
           <div className="bg-ivory p-6 rounded-lg shadow">
             <h3 className="text-xl font-bold text-maroon mb-2">Premium</h3>
-            <p className="text-gray-700 mb-4">₹8 – ₹12 Lakhs</p>
+            <p className="text-gray-700 mb-4 font-semibold">{lang === 'en' ? 'Contact us for pricing' : 'விலை விவரங்களுக்கு எங்களை தொடர்பு கொள்ளவும்'}</p>
             <ul className="text-gray-700 space-y-2">
               <li>Premium Hall</li>
               <li>Catering (500 pax)</li>
@@ -30,7 +30,7 @@ export default function Offers({ lang }: { lang: string }) {
           </div>
           <div className="bg-ivory p-6 rounded-lg shadow">
             <h3 className="text-xl font-bold text-maroon mb-2">Luxury</h3>
-            <p className="text-gray-700 mb-4">₹20 – ₹50 Lakhs</p>
+            <p className="text-gray-700 mb-4 font-semibold">{lang === 'en' ? 'Contact us for pricing' : 'விலை விவரங்களுக்கு எங்களை தொடர்பு கொள்ளவும்'}</p>
             <ul className="text-gray-700 space-y-2">
               <li>Luxury Venue</li>
               <li>Premium Catering</li>
@@ -46,7 +46,7 @@ export default function Offers({ lang }: { lang: string }) {
           <h3 className="text-2xl font-serif font-bold text-maroon mb-4">
             FIRST 10 ROYAL WEDDING OFFER
           </h3>
-          <p className="text-gray-800 mb-4">₹15,000 Flat Discount + FREE Wedding Gift (choose one):</p>
+          <p className="text-gray-800 mb-4 font-semibold">{lang === 'en' ? 'Exclusive Flat Discount + FREE Wedding Gift (choose one):' : 'பிரத்யேக தள்ளுபடி + இலவச திருமண பரிசு (ஒன்றைத் தேர்ந்தெடுக்கவும்):'}</p>
           <ul className="list-disc pl-6 space-y-2 text-gray-800">
             <li>Free Digital Invitation</li>
             <li>Free Drone Shoot (15 mins)</li>

@@ -42,12 +42,12 @@ export default function Services({ lang }: { lang: string }) {
   ];
 
   const images: Record<string,string> = {
-    venues: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    catering: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    decoration: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    photography: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    entertainment: 'https://images.unsplash.com/photo-1508970436-8b7bfa0e3fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    planning: 'https://images.unsplash.com/photo-1529336953121-dc2d0bbf0a99?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    venues: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Luxury venue
+    catering: 'https://images.unsplash.com/photo-1555244162-803834f70033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // South Indian catering
+    decoration: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Elegant decoration
+    photography: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Wedding photography
+    entertainment: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Live music
+    planning: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' // Wedding planning
   };
 
   return (
@@ -73,8 +73,11 @@ export default function Services({ lang }: { lang: string }) {
             transition={{ delay: 0.1 }}
             className="section-title"
           >
-            {lang === 'en' ? 'Our Premium Services' : 'எங்கள் பிரீமியம் சேவைகள்'}
+            {lang === 'en' ? 'Venue Inspirations' : 'திருமண இடங்கள்'}
           </motion.h2>
+          <p className="text-gray-500 mt-4 italic text-sm">
+            {lang === 'en' ? '*Images are for representation purposes only' : '*படங்கள் விளக்கத்திற்காக மட்டுமே'}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

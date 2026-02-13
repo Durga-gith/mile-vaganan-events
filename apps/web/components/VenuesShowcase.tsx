@@ -5,22 +5,22 @@ import { MapPin, Calendar, ArrowRight } from 'lucide-react';
 export default function VenuesShowcase({ lang }: { lang: string }) {
   const cards = [
     {
-      title: { en: 'Royal Palace Convention Hall', ta: 'ராயல் பாலஸ் மாநாட்டு மண்டபம்' },
+      title: { en: 'Premium Venue – Chennai', ta: 'பிரீமியம் திருமண மண்டபம் – சென்னை' },
       city: 'Chennai',
       img: 'https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      price: '₹75,000 - ₹1,50,000'
+      price: { en: 'Contact for price', ta: 'விலைக்கு தொடர்பு கொள்ளவும்' }
     },
     {
-      title: { en: 'Heritage Garden Resort', ta: 'பாரம்பரிய தோட்ட ரிசார்ட்' },
+      title: { en: 'Luxury Resort – Coimbatore', ta: 'லக்ஸரி ரிசார்ட் – கோயம்புத்தூர்' },
       city: 'Coimbatore',
       img: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      price: '₹50,000 - ₹1,00,000'
+      price: { en: 'Contact for price', ta: 'விலைக்கு தொடர்பு கொள்ளவும்' }
     },
     {
-      title: { en: 'Classic Grand Hall', ta: 'கிளாசிக் கிராண்ட் ஹால்' },
+      title: { en: 'Heritage Grand Hall – Madurai', ta: 'பாரம்பரிய கிராண்ட் ஹால் – மதுரை' },
       city: 'Madurai',
       img: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      price: '₹60,000 - ₹1,20,000'
+      price: { en: 'Contact for price', ta: 'விலைக்கு தொடர்பு கொள்ளவும்' }
     },
   ];
 
@@ -29,7 +29,7 @@ export default function VenuesShowcase({ lang }: { lang: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-serif font-bold text-maroon mb-3">
-            {lang === 'en' ? 'Signature Venues' : 'ஒப்பற்ற திருமண இடங்கள்'}
+            {lang === 'en' ? 'Venue Inspirations' : 'திருமண இடங்கள்'}
           </h2>
           <p className="text-gray-600">
             {lang === 'en' ? 'Handpicked destinations to host your royal celebration.' : 'உங்கள் ராஜகம்பீரக் கொண்டாட்டத்திற்கான தேர்ந்தெடுக்கப்பட்ட இடங்கள்.'}
@@ -41,7 +41,7 @@ export default function VenuesShowcase({ lang }: { lang: string }) {
             <div key={i} className="group rounded-xl overflow-hidden shadow hover:shadow-xl transition bg-white">
               <div className="relative">
                 <img src={c.img} alt={lang==='en'?c.title.en:c.title.ta} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300" />
-                <div className="absolute top-3 left-3 bg-gold text-maroon-dark px-3 py-1 rounded-full text-sm font-semibold">{c.price}</div>
+                <div className="absolute top-3 left-3 bg-gold text-maroon-dark px-3 py-1 rounded-full text-sm font-semibold">{lang === 'en' ? c.price.en : c.price.ta}</div>
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-bold text-maroon mb-2">{lang==='en'?c.title.en:c.title.ta}</h3>

@@ -96,9 +96,16 @@ export default function Footer({ lang }: { lang: string }) {
         </div>
 
         <div className="pt-12 border-t border-gold/10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-ivory/40 text-sm font-light">
-            &copy; {new Date().getFullYear()} Mile Vaganan Events. Designed for Royal Excellence.
-          </p>
+          <div className="text-center md:text-left">
+            <p className="text-ivory/40 text-sm font-light">
+              &copy; {new Date().getFullYear()} Mile Vaganan Events. Designed for Royal Excellence.
+            </p>
+            <p className="text-ivory/30 text-[10px] mt-1 italic uppercase tracking-wider">
+              {lang === 'en' 
+                ? 'Images are for representation purposes only.' 
+                : 'படங்கள் விளக்கத்திற்காக மட்டுமே.'}
+            </p>
+          </div>
           <div className="flex gap-8 text-sm text-ivory/40 font-light">
             <a href="#" className="hover:text-gold transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-gold transition-colors">Terms of Service</a>
