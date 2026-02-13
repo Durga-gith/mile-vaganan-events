@@ -1,10 +1,18 @@
 'use client';
 
 import { Menu, X, Globe } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: string) => void }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { en: 'Home', ta: 'முகப்பு', href: '#home' },
@@ -16,56 +24,101 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
   ];
 
   return (
-    <nav className="bg-ivory shadow-md sticky top-0 z-50">
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-500 ${
+      scrolled ? 'bg-white/90 backdrop-blur-lg shadow-lg py-2' : 'bg-transparent py-4'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold text-maroon font-serif">
-              Mile Vaganan
+        <div className="flex justify-between items-center h-20">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center"
+          >
+            <span className={`text-3xl font-bold font-serif tracking-tighter transition-colors duration-300 ${
+              scrolled ? 'text-maroon' : 'text-ivory'
+            }`}>
+              Mile <span className="text-gold">Vaganan</span>
             </span>
-          </div>
+          </motion.div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-10">
             {navItems.map((item, idx) => (
-              <a key={idx} href={item.href} className="text-maroon hover:text-gold-dark transition font-medium">
+              <motion.a 
+                key={idx} 
+                href={item.href}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className={`transition-all duration-300 font-medium hover:text-gold relative group ${
+                  scrolled ? 'text-maroon' : 'text-ivory'
+                }`}
+              >
                 {lang === 'en' ? item.en : item.ta}
-              </a>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+              </motion.a>
             ))}
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setLang(lang === 'en' ? 'ta' : 'en')}
-              className="flex items-center gap-2 bg-maroon text-white px-4 py-2 rounded-full hover:bg-maroon-dark transition"
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 border ${
+                scrolled 
+                  ? 'bg-maroon text-white border-maroon hover:bg-maroon-dark' 
+                  : 'bg-white/10 text-ivory border-ivory/30 hover:bg-white/20'
+              }`}
             >
-              <Globe size={16} />
-              {lang === 'en' ? 'தமிழ்' : 'English'}
-            </button>
+              <Globe size={18} />
+              <span className="text-sm font-semibold tracking-wide">
+                {lang === 'en' ? 'தமிழ்' : 'English'}
+              </span>
+            </motion.button>
           </div>
 
           <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-maroon">
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className={`transition-colors duration-300 ${scrolled ? 'text-maroon' : 'text-ivory'}`}
+            >
+              {isOpen ? <X size={32} /> : <Menu size={32} />}
             </button>
           </div>
         </div>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden bg-ivory border-t border-gold-light">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item, idx) => (
-              <a key={idx} href={item.href} className="block px-3 py-2 text-maroon hover:bg-gold-light rounded">
-                {lang === 'en' ? item.en : item.ta}
-              </a>
-            ))}
-            <button 
-              onClick={() => setLang(lang === 'en' ? 'ta' : 'en')}
-              className="w-full text-left flex items-center gap-2 px-3 py-2 text-maroon hover:bg-gold-light rounded"
-            >
-              <Globe size={16} />
-              {lang === 'en' ? 'தமிழ்' : 'English'}
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t border-gold-light/20 overflow-hidden"
+          >
+            <div className="px-4 pt-4 pb-8 space-y-2">
+              {navItems.map((item, idx) => (
+                <a 
+                  key={idx} 
+                  href={item.href} 
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-3 text-maroon hover:bg-gold-light/10 rounded-xl transition-colors font-medium text-lg"
+                >
+                  {lang === 'en' ? item.en : item.ta}
+                </a>
+              ))}
+              <button 
+                onClick={() => {
+                  setLang(lang === 'en' ? 'ta' : 'en');
+                  setIsOpen(false);
+                }}
+                className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-4 bg-maroon text-white rounded-xl font-bold"
+              >
+                <Globe size={20} />
+                {lang === 'en' ? 'தமிழ்' : 'English'}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

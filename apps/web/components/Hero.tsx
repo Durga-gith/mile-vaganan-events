@@ -1,5 +1,6 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Hero({ lang }: { lang: string }) {
   const images = [
@@ -9,49 +10,165 @@ export default function Hero({ lang }: { lang: string }) {
     'https://images.unsplash.com/photo-1464207687429-7505649dae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'
   ];
   const [idx, setIdx] = useState(0);
+
   useEffect(() => {
     const t = setInterval(() => setIdx((i) => (i + 1) % images.length), 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [images.length]);
+
   return (
-    <div id="home" className="relative bg-gradient-to-r from-maroon-dark to-maroon text-ivory py-24 lg:py-32 overflow-hidden">
-      <div className="absolute inset-0">
-        {images.map((src, i) => (
-          <img
-            key={i}
-            src={src}
-            alt="hero"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ${i===idx?'opacity-25':'opacity-0'}`}
-            loading="eager"
+    <div id="home" className="relative h-screen flex items-center justify-center text-ivory overflow-hidden">
+      {/* Background Image Slideshow */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={idx}
+            src={images[idx]}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 0.4, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 w-full h-full object-cover"
           />
-        ))}
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-maroon-dark/60 mix-blend-multiply"></div>
       </div>
-      <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
-      <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-gold blur-3xl opacity-20"></div>
-      <div className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-maroon-light blur-3xl opacity-20"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold font-serif mb-6 leading-tight">
-          {lang === 'en' ? 'Crafting Royal Weddings' : 'ராஜகம்பீரமான திருமணங்களை உருவாக்குதல்'}
-        </h1>
-        <p className="text-xl md:text-2xl mb-10 text-gold-light max-w-3xl mx-auto">
-          {lang === 'en' 
-            ? 'From traditional rituals to modern celebrations, we bring your dream wedding to life with elegance and perfection.'
-            : 'பாரம்பரிய சடங்குகள் முதல் நவீன கொண்டாட்டங்கள் வரை, உங்கள் கனவுத் திருமணத்தை நேர்த்தியுடனும் முழுமையுடனும் நிஜமாக்குகிறோம்.'}
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <a href="#book" className="bg-gold hover:bg-gold-dark text-maroon-dark font-bold py-3 px-8 rounded-full transition flex items-center justify-center gap-2">
-            {lang === 'en' ? 'Book Now' : 'இப்போதே முன்பதிவு செய்யுங்கள்'}
-            <ArrowRight size={20} />
-          </a>
-          <a href="#packages" className="border-2 border-gold text-gold hover:bg-gold hover:text-maroon-dark font-bold py-3 px-8 rounded-full transition">
-            {lang === 'en' ? 'View Packages' : 'தொகுப்புகளைப் பார்க்கவும்'}
-          </a>
+
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 opacity-20 bg-royal-pattern"></div>
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-maroon-dark to-transparent z-10"></div>
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-maroon-dark to-transparent z-10"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
+        {/* Live Animations - Elephant Blessing */}
+        <div className="absolute top-20 left-4 md:left-10 z-30 hidden lg:block">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+          >
+            <img 
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
+              alt="Elephant Blessing Left" 
+              className="w-48 h-48 object-contain filter drop-shadow-2xl"
+            />
+          </motion.div>
         </div>
-        <div className="mt-8 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-gold/40 bg-white/10 backdrop-blur">
-          <span className="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-          <span className="text-gold-light">{lang==='en'?'Royal Experience, Tailored for You':'உங்களுக்காக தனிப்பயன் ராஜ அனுபவம்'}</span>
+        <div className="absolute top-20 right-4 md:right-10 z-30 hidden lg:block">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="scale-x-[-1]"
+          >
+            <img 
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
+              alt="Elephant Blessing Right" 
+              className="w-48 h-48 object-contain filter drop-shadow-2xl"
+            />
+          </motion.div>
         </div>
+
+        {/* Live Animations - Girl Putting Flowers */}
+        <div className="absolute bottom-10 left-10 z-30 hidden md:block">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1.5 }}
+          >
+            <img 
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
+              alt="Flower Girl Left" 
+              className="w-40 h-40 object-contain filter drop-shadow-2xl"
+            />
+          </motion.div>
+        </div>
+        <div className="absolute bottom-10 right-10 z-30 hidden md:block">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1.5 }}
+            className="scale-x-[-1]"
+          >
+            <img 
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
+              alt="Flower Girl Right" 
+              className="w-40 h-40 object-contain filter drop-shadow-2xl"
+            />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <span className="inline-block text-gold-light tracking-[0.3em] uppercase text-sm mb-4 font-medium">
+            {lang === 'en' ? 'Exquisite Event Planners' : 'நேர்த்தியான நிகழ்வு திட்டமிடுபவர்கள்'}
+          </span>
+          <h1 className="text-5xl md:text-8xl font-bold mb-8 leading-tight drop-shadow-2xl">
+            {lang === 'en' ? 'Crafting Royal' : 'ராஜகம்பீரமான'}<br />
+            <span className="text-gold italic font-serif">
+              {lang === 'en' ? 'Weddings' : 'திருமணங்கள்'}
+            </span>
+          </h1>
+          <p className="text-lg md:text-2xl mb-12 text-ivory/90 max-w-2xl mx-auto font-light leading-relaxed">
+            {lang === 'en' 
+              ? 'From traditional rituals to modern celebrations, we bring your dream wedding to life with elegance and perfection.'
+              : 'பாரம்பரிய சடங்குகள் முதல் நவீன கொண்டாட்டங்கள் வரை, உங்கள் கனவுத் திருமணத்தை நேர்த்தியுடனும் முழுமையுடனும் நிஜமாக்குகிறோம்.'}
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
+            <motion.a 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="#book" 
+              className="btn-gold px-10 py-4 text-lg"
+            >
+              {lang === 'en' ? 'Plan Your Event' : 'உங்கள் நிகழ்வைத் திட்டமிடுங்கள்'}
+              <ArrowRight size={20} />
+            </motion.a>
+            <motion.a 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="#packages" 
+              className="btn-outline-gold px-10 py-4 text-lg backdrop-blur-sm"
+            >
+              {lang === 'en' ? 'Our Collections' : 'எங்கள் சேகரிப்புகள்'}
+            </motion.a>
+          </div>
+        </motion.div>
+
+        {/* Floating elements */}
+        <motion.div 
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-gold blur-[120px] opacity-20"
+        ></motion.div>
+        <motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-12 -left-12 w-64 h-64 rounded-full bg-maroon-light blur-[120px] opacity-20"
+        ></motion.div>
       </div>
+
+      {/* Scroll Down Indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+      >
+        <span className="text-gold-light text-xs uppercase tracking-widest opacity-70">
+          {lang === 'en' ? 'Scroll' : 'கீழே செல்லவும்'}
+        </span>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <ChevronDown className="text-gold" size={24} />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

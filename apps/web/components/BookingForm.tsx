@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function BookingForm({ lang }: { lang: string }) {
   const [name, setName] = useState('');
@@ -19,11 +21,8 @@ export default function BookingForm({ lang }: { lang: string }) {
     setStatus('submitting');
     setErrorMessage('');
     try {
-      // Use the environment variable, but remove any trailing slashes to be safe
       const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://mile-vaganan-events-xaxq.onrender.com').replace(/\/$/, '');
       const apiUrl = `${apiBase}/services/lead`;
-      
-      console.log('Submitting lead to:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -33,12 +32,10 @@ export default function BookingForm({ lang }: { lang: string }) {
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('API Error Response:', errorText);
         throw new Error(`Server responded with ${response.status}: ${errorText}`);
       }
       
       setStatus('success');
-      // Reset form
       setName('');
       setEmail('');
       setPhone('');
@@ -55,161 +52,230 @@ export default function BookingForm({ lang }: { lang: string }) {
 
   const t = {
     en: {
-      title: 'Book Your Event',
+      title: 'Begin Your Journey',
+      subtitle: 'Tell us about your dream event and let us make it a royal reality.',
       name: 'Full Name',
       email: 'Email Address',
       phone: 'Phone Number',
       date: 'Event Date',
       city: 'City',
-      package: 'Package',
-      services: 'Interested Services',
+      package: 'Package Preference',
+      services: 'Services Interested In',
       notes: 'Notes / Special Requests',
-      submit: 'Submit Booking Request',
-      success: 'Thank you! We will contact you soon.',
-      error: 'Failed to submit: ',
-      tryAgain: 'Please try again or contact us directly.',
+      submit: 'Request a Consultation',
+      submitting: 'Sending Request...',
+      success: 'Thank you for choosing Mile Vaganan!',
+      successDesc: 'Your request has been received. Our royal planners will contact you within 24 hours.',
+      error: 'Something went wrong',
+      tryAgain: 'Please try again or contact us directly at milevagananevents@gmail.com',
     },
     ta: {
-      title: 'உங்கள் நிகழ்வை முன்பதிவு செய்யுங்கள்',
+      title: 'உங்கள் பயணத்தைத் தொடங்குங்கள்',
+      subtitle: 'உங்கள் கனவு நிகழ்வைப் பற்றி எங்களிடம் கூறுங்கள், நாங்கள் அதை ராஜகம்பீரமான உண்மையாக மாற்றுவோம்.',
       name: 'முழு பெயர்',
       email: 'மின்னஞ்சல் முகவரி',
       phone: 'தொலைபேசி எண்',
       date: 'நிகழ்வு தேதி',
       city: 'ஊர்',
-      package: 'பேக்கேஜ்',
-      services: 'விருப்பமான சேவைகள்',
+      package: 'பேக்கேஜ் முன்னுரிமை',
+      services: 'ஆர்வமுள்ள சேவைகள்',
       notes: 'குறிப்புகள் / சிறப்பு கோரிக்கைகள்',
-      submit: 'முன்பதிவு கோரிக்கையை சமர்ப்பிக்கவும்',
-      success: 'நன்றி! விரைவில் உங்களைத் தொடர்பு கொள்வோம்.',
-      error: 'சமர்ப்பிக்க முடியவில்லை: ',
+      submit: 'ஆலோசனையை கோருங்கள்',
+      submitting: 'அனுப்பப்படுகிறது...',
+      success: 'மைல் வகானனைத் தேர்ந்தெடுத்ததற்கு நன்றி!',
+      successDesc: 'உங்கள் கோரிக்கை பெறப்பட்டது. எங்கள் ராஜகம்பீரத் திட்டமிடுபவர்கள் 24 மணி நேரத்திற்குள் உங்களைத் தொடர்பு கொள்வார்கள்.',
+      error: 'ஏதோ தவறு நடந்துவிட்டது',
       tryAgain: 'மீண்டும் முயற்சிக்கவும் அல்லது எங்களை நேரடியாக தொடர்பு கொள்ளவும்.',
     }
   }[lang as 'en' | 'ta'];
 
+  const inputClasses = "w-full px-5 py-4 bg-ivory-dark/30 border-b-2 border-gold/20 focus:border-gold outline-none transition-all duration-300 placeholder:text-gray-400 font-medium";
+  const labelClasses = "block text-xs uppercase tracking-widest font-bold text-maroon-light mb-2";
+
   return (
-    <div id="book" className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 -mt-24 relative z-10 border border-gold/20">
-      <h2 className="text-3xl font-serif font-bold text-maroon mb-8 text-center">{t.title}</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.name}</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.email}</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-            />
-          </div>
+    <section id="book" className="py-24 px-4 bg-white relative overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="max-w-5xl mx-auto glass-card p-8 md:p-16 relative z-10"
+      >
+        <div className="text-center mb-12">
+          <h2 className="section-title mb-4">{t.title}</h2>
+          <p className="text-gray-600 max-w-xl mx-auto italic">{t.subtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.phone}</label>
-            <input
-              type="tel"
-              required
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.date}</label>
-            <input
-              type="date"
-              required
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.city}</label>
-            <input
-              type="text"
-              required
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.package}</label>
-            <select
-              value={packageType}
-              onChange={(e) => setPackageType(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
+        <AnimatePresence mode="wait">
+          {status === 'success' ? (
+            <motion.div 
+              key="success"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-12"
             >
-              <option value="Basic">Basic</option>
-              <option value="Premium">Premium</option>
-              <option value="Royal">Royal</option>
-              <option value="Custom">Custom</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-maroon mb-1">{t.services}</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Venues', 'Catering', 'Decoration', 'Photography', 'Entertainment', 'Planning'].map((service) => (
-                <label key={service} className="flex items-center space-x-2 text-sm">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 size={40} className="text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-maroon mb-4">{t.success}</h3>
+              <p className="text-gray-600 mb-8">{t.successDesc}</p>
+              <button 
+                onClick={() => setStatus('idle')}
+                className="btn-gold px-8 py-3"
+              >
+                Send Another Request
+              </button>
+            </motion.div>
+          ) : (
+            <motion.form 
+              key="form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onSubmit={handleSubmit} 
+              className="space-y-10"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.name}</label>
                   <input
-                    type="checkbox"
-                    checked={services.includes(service)}
-                    onChange={(e) => {
-                      if (e.target.checked) setServices([...services, service]);
-                      else setServices(services.filter(s => s !== service));
-                    }}
-                    className="rounded border-gold/30 text-maroon focus:ring-maroon"
+                    type="text"
+                    required
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className={inputClasses}
                   />
-                  <span>{service}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.email}</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.phone}</label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="+91 00000 00000"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.date}</label>
+                  <input
+                    type="date"
+                    required
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.city}</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Event location"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className={inputClasses}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClasses}>{t.package}</label>
+                  <select
+                    value={packageType}
+                    onChange={(e) => setPackageType(e.target.value)}
+                    className={inputClasses}
+                  >
+                    <option value="Basic">Classic Collection</option>
+                    <option value="Premium">Royal Heritage</option>
+                    <option value="Elite">Imperial Signature</option>
+                  </select>
+                </div>
+              </div>
 
-        <div>
-          <label className="block text-sm font-medium text-maroon mb-1">{t.notes}</label>
-          <textarea
-            rows={4}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-maroon focus:border-transparent"
-          />
-        </div>
+              <div className="space-y-4">
+                <label className={labelClasses}>{t.services}</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {['Decoration', 'Catering', 'Photography', 'Music', 'Venues', 'Planning'].map((s) => (
+                    <label key={s} className="flex items-center gap-3 group cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={services.includes(s)}
+                        onChange={(e) => {
+                          if (e.target.checked) setServices([...services, s]);
+                          else setServices(services.filter((x) => x !== s));
+                        }}
+                        className="w-5 h-5 rounded border-gold/30 text-gold focus:ring-gold"
+                      />
+                      <span className="text-gray-700 group-hover:text-maroon transition-colors">{s}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
 
-        <button
-          type="submit"
-          disabled={status === 'submitting'}
-          className="w-full md:w-auto px-8 py-3 bg-maroon text-white rounded-full font-bold hover:bg-maroon/90 transition-colors disabled:bg-gray-400"
-        >
-          {status === 'submitting' ? '...' : t.submit}
-        </button>
+              <div className="space-y-2">
+                <label className={labelClasses}>{t.notes}</label>
+                <textarea
+                  rows={4}
+                  placeholder="Tell us about your vision..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className={inputClasses + " resize-none"}
+                ></textarea>
+              </div>
 
-        {status === 'success' && (
-          <p className="text-green-600 font-medium text-center">{t.success}</p>
-        )}
-        {status === 'error' && (
-          <div className="text-red-600 text-center">
-            <p className="font-medium">{t.error} {errorMessage}</p>
-            <p className="text-sm">{t.tryAgain}</p>
-          </div>
-        )}
-      </form>
-    </div>
+              {status === 'error' && (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="bg-red-50 border-l-4 border-red-500 p-4 flex items-start gap-3"
+                >
+                  <AlertCircle className="text-red-500 mt-0.5" size={20} />
+                  <div>
+                    <p className="text-red-800 font-bold">{t.error}</p>
+                    <p className="text-red-700 text-sm">{errorMessage || t.tryAgain}</p>
+                  </div>
+                </motion.div>
+              )}
+
+              <div className="flex justify-center pt-6">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={status === 'submitting'}
+                  type="submit"
+                  className="btn-gold px-12 py-5 text-xl shadow-2xl relative overflow-hidden group disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  <span className="relative z-10 flex items-center gap-3">
+                    {status === 'submitting' ? (
+                      <>
+                        <Loader2 className="animate-spin" size={24} />
+                        {t.submitting}
+                      </>
+                    ) : (
+                      <>
+                        <Send size={24} />
+                        {t.submit}
+                      </>
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                </motion.button>
+              </div>
+            </motion.form>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </section>
   );
 }
