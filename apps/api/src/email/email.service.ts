@@ -38,15 +38,36 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private readonly logoUrl = 'https://mile-vaganan-events.vercel.app/logo.jpg';
 
-  private getEmailHeader() {
+  private getEmailHeader(customerName?: string) {
+    const title = customerName ? `Thank you, ${customerName} 💍` : 'Mile Vaganan Events';
     return `
-      <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background-color: #800000; background-image: linear-gradient(to bottom, #800000, #600000);">
-        <div style="display: inline-block; padding: 15px; background: white; border-radius: 50%; margin-bottom: 20px; border: 3px solid #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
-          <img src="${this.logoUrl}" alt="Mile Vaganan Events" width="100" height="100" style="display: block; width: 100px; height: 100px; border-radius: 50%;" />
+      <div style="text-align: center; margin-bottom: 30px; padding: 50px 20px; background-color: #F9F6F1; border-bottom: 4px solid #C5A028;">
+        <!-- Gold Stamp Logo Section -->
+        <div style="display: inline-block; position: relative; margin-bottom: 25px;">
+          <div style="
+            width: 120px; 
+            height: 120px; 
+            background: white; 
+            border-radius: 50%; 
+            border: 3px solid #C5A028;
+            box-shadow: 0 0 20px rgba(197, 160, 40, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0 auto;
+          ">
+            <img src="${this.logoUrl}" alt="Mile Vaganan Events" width="100" height="100" style="display: block; width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" />
+          </div>
         </div>
-        <h1 style="color: #d4af37; margin: 0; font-family: 'Playfair Display', 'Georgia', serif; font-size: 32px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold;">Mile Vaganan Events</h1>
-        <div style="width: 60px; height: 2px; background: #d4af37; margin: 15px auto;"></div>
-        <p style="color: #fffaf0; margin: 0; font-style: italic; font-size: 18px; font-family: 'Georgia', serif; letter-spacing: 1px;">Crafting Royal Weddings & Memorable Events</p>
+        
+        <h1 style="color: #6A1B1B; margin: 0; font-family: 'Playfair Display', 'Georgia', serif; font-size: 32px; text-transform: none; letter-spacing: 1px; font-weight: bold;">
+          ${title}
+        </h1>
+        <div style="width: 50px; height: 2px; background: #C5A028; margin: 20px auto;"></div>
+        <p style="color: #6A1B1B; margin: 0; font-style: italic; font-size: 18px; font-family: 'Georgia', serif; letter-spacing: 0.5px; opacity: 0.9;">
+          Crafting Royal Weddings & Memorable Events
+        </p>
       </div>
     `;
   }
@@ -66,35 +87,38 @@ export class EmailService {
     const subject = `New Booking Received: ${details.customerName} - ${details.bookingId}`;
     
     const html = `
-      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
+      <div style="font-family: 'Playfair Display', 'Georgia', serif; max-width: 600px; margin: 0 auto; border: 1px solid #C5A028; padding: 0; background-color: #F9F6F1; color: #6A1B1B;">
         ${this.getEmailHeader()}
-        <div style="padding: 20px;">
-          <h2 style="color: #800000; text-align: center;">New Booking Alert</h2>
+        <div style="padding: 30px;">
+          <h2 style="color: #6A1B1B; text-align: center; font-family: 'Playfair Display', serif;">New Booking Alert</h2>
           <p><strong>Customer Name:</strong> ${details.customerName}</p>
           <p><strong>Email:</strong> ${details.customerEmail}</p>
           <p><strong>Phone:</strong> ${details.customerPhone}</p>
-          <hr style="border-color: #d4af37;" />
+          <hr style="border: 0; border-top: 1px solid #C5A028; margin: 20px 0;" />
           
-          <h3>Booked Services</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #f4cf57;">
-              <th style="padding: 8px; text-align: left;">Service</th>
-              <th style="padding: 8px; text-align: right;">Price</th>
-              <th style="padding: 8px; text-align: right;">Date</th>
+          <h3 style="color: #6A1B1B;">Booked Services</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <tr style="background-color: #C5A028; color: white;">
+              <th style="padding: 12px; text-align: left;">Service</th>
+              <th style="padding: 12px; text-align: right;">Price</th>
+              <th style="padding: 12px; text-align: right;">Date</th>
             </tr>
             ${details.items.map(item => `
               <tr>
-                <td style="padding: 8px; border-bottom: 1px solid #ddd;">${item.serviceName}</td>
-                <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">₹${item.price}</td>
-                <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right;">${new Date(item.date).toLocaleDateString()}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #C5A028;">${item.serviceName}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #C5A028; text-align: right;">₹${item.price}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #C5A028; text-align: right;">${new Date(item.date).toLocaleDateString()}</td>
               </tr>
             `).join('')}
           </table>
           
-          <h3 style="text-align: right; color: #800000;">Total Amount: ₹${details.totalAmount}</h3>
+          <div style="text-align: right; margin: 30px 0;">
+            <h3 style="color: #6A1B1B; margin: 0;">Total Amount: <span style="color: #C5A028;">₹${details.totalAmount}</span></h3>
+          </div>
           
-          <div style="text-align: center; margin-top: 20px; color: #666;">
+          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #C5A028; color: #6A1B1B; font-size: 12px; opacity: 0.8;">
             <p>This is an automated notification from Mile Vaganan Events.</p>
+            <p>© 2026 Mile Vaganan Events. All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -124,36 +148,39 @@ export class EmailService {
   }
 
   private async sendCustomerBookingConfirmation(details: BookingDetails) {
-    const subject = `Booking Confirmed! - Mile Vaganan Events`;
+    const subject = `✨ Booking Confirmation – Mile Vaganan Events`;
     const html = `
-      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
-        ${this.getEmailHeader()}
+      <div style="font-family: 'Playfair Display', 'Georgia', serif; max-width: 600px; margin: 0 auto; border: 1px solid #C5A028; padding: 0; background-color: #F9F6F1; color: #6A1B1B;">
+        ${this.getEmailHeader(details.customerName)}
         <div style="padding: 40px;">
-          <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #d4af37; pb: 10px;">Booking Confirmation</h2>
+          <p style="font-size: 18px; line-height: 1.6;">We have successfully received your booking request.</p>
           
-          <p>Dear <strong>${details.customerName}</strong>,</p>
-          <p>Thank you for choosing Mile Vaganan Events for your special day. Your booking has been successfully received and is being processed.</p>
-          
-          <div style="background-color: #fff; border: 1px solid #eee; padding: 20px; margin: 20px 0;">
-            <p><strong>Booking ID:</strong> ${details.bookingId}</p>
-            <p><strong>Total Amount:</strong> ₹${details.totalAmount}</p>
+          <div style="background-color: white; border: 1px solid #C5A028; padding: 25px; margin: 30px 0; border-radius: 4px;">
+            <h3 style="color: #6A1B1B; margin-top: 0; border-bottom: 1px solid #C5A028; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-size: 14px;">Booking Details</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              ${details.items.map(item => `
+                <li style="padding: 10px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                  <span><strong>• Service:</strong> ${item.serviceName}</span>
+                </li>
+                <li style="padding: 10px 0; border-bottom: 1px dashed #eee;">
+                  <span><strong>• Event Date:</strong> ${new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                </li>
+              `).join('')}
+              <li style="padding: 10px 0;">
+                <span><strong>• Phone:</strong> ${details.customerPhone}</span>
+              </li>
+            </ul>
           </div>
 
-          <h3>Your Selected Services:</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            ${details.items.map(item => `
-              <tr>
-                <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.serviceName}</td>
-                <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">${new Date(item.date).toLocaleDateString()}</td>
-              </tr>
-            `).join('')}
-          </table>
-
-          <p style="margin-top: 30px;">We will contact you soon by <strong>milevagananevents@gmail.com</strong> to discuss the next steps for your royal event.</p>
+          <div style="text-align: center; margin: 40px 0;">
+            <p style="font-size: 18px; color: #6A1B1B; font-style: italic;">We’re honored to be part of your special day.<br/>Our team will contact you shortly.</p>
+            <p style="margin-top: 25px; font-weight: bold; color: #6A1B1B;">Warm Regards,<br/><span style="color: #C5A028;">Mile Vaganan Events</span></p>
+          </div>
           
-          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #d4af37; color: #666; font-size: 12px;">
-            <p>Mile Vaganan Events | milevagananevents@gmail.com</p>
-            <p>© 2026 Mile Vaganan Events. All rights reserved.</p>
+          <div style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 2px solid #C5A028; color: #6A1B1B; font-size: 13px;">
+            <p style="margin-bottom: 5px;"><strong>Contact:</strong> <a href="mailto:milevagananevents@gmail.com" style="color: #6A1B1B; text-decoration: none;">milevagananevents@gmail.com</a></p>
+            <p style="margin-bottom: 20px;"><strong>WhatsApp/Phone:</strong> +91 93633 42426</p>
+            <p style="opacity: 0.7; font-size: 11px;">© 2026 Mile Vaganan Events. All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -212,26 +239,40 @@ export class EmailService {
   }
 
   private async sendCustomerLeadConfirmation(details: LeadDetails) {
-    const subject = `Enquiry Received - Mile Vaganan Events`;
+    const subject = `✨ Enquiry Received - Mile Vaganan Events`;
     const html = `
-      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
-        ${this.getEmailHeader()}
+      <div style="font-family: 'Playfair Display', 'Georgia', serif; max-width: 600px; margin: 0 auto; border: 1px solid #C5A028; padding: 0; background-color: #F9F6F1; color: #6A1B1B;">
+        ${this.getEmailHeader(details.name)}
         <div style="padding: 40px;">
-          <h2 style="color: #800000; text-align: center;">Hello ${details.name}!</h2>
+          <p style="font-size: 18px; line-height: 1.6;">We have successfully received your enquiry regarding your upcoming event.</p>
           
-          <p>Thank you for reaching out to us. We have received your enquiry for your event on <strong>${details.date}</strong>.</p>
-          
-          <p>Our event experts are reviewing your requirements and will get back to you within 24 hours with a personalized proposal.</p>
-          
-          <div style="background-color: #fff; border: 1px solid #eee; padding: 20px; margin: 20px 0;">
-            <p><strong>Services Interested:</strong> ${details.services.join(', ')}</p>
-            <p><strong>Package:</strong> ${details.packageType}</p>
+          <div style="background-color: white; border: 1px solid #C5A028; padding: 25px; margin: 30px 0; border-radius: 4px;">
+            <h3 style="color: #6A1B1B; margin-top: 0; border-bottom: 1px solid #C5A028; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-size: 14px;">Enquiry Summary</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 10px 0; border-bottom: 1px dashed #eee;">
+                <span><strong>• Package:</strong> ${details.packageType}</span>
+              </li>
+              <li style="padding: 10px 0; border-bottom: 1px dashed #eee;">
+                <span><strong>• Event Date:</strong> ${details.date}</span>
+              </li>
+              <li style="padding: 10px 0; border-bottom: 1px dashed #eee;">
+                <span><strong>• City:</strong> ${details.city}</span>
+              </li>
+              <li style="padding: 10px 0;">
+                <span><strong>• Services:</strong> ${details.services.join(', ')}</span>
+              </li>
+            </ul>
           </div>
 
-          <p>If you have any urgent questions, feel free to reply to this email.</p>
+          <div style="text-align: center; margin: 40px 0;">
+            <p style="font-size: 18px; color: #6A1B1B; font-style: italic;">We’re honored to be considered for your special day.<br/>Our team will contact you shortly to discuss your royal celebration.</p>
+            <p style="margin-top: 25px; font-weight: bold; color: #6A1B1B;">Warm Regards,<br/><span style="color: #C5A028;">Mile Vaganan Events</span></p>
+          </div>
           
-          <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #d4af37; color: #666;">
-            <p>Warm regards,<br/>Team Mile Vaganan</p>
+          <div style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 2px solid #C5A028; color: #6A1B1B; font-size: 13px;">
+            <p style="margin-bottom: 5px;"><strong>Contact:</strong> <a href="mailto:milevagananevents@gmail.com" style="color: #6A1B1B; text-decoration: none;">milevagananevents@gmail.com</a></p>
+            <p style="margin-bottom: 20px;"><strong>WhatsApp/Phone:</strong> +91 93633 42426</p>
+            <p style="opacity: 0.7; font-size: 11px;">© 2026 Mile Vaganan Events. All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -255,34 +296,34 @@ export class EmailService {
     const approveUrl = `https://mile-vaganan-events-xaxq.onrender.com/reviews/approve?email=${details.email}&name=${encodeURIComponent(details.name)}`;
 
     const html = `
-      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
+      <div style="font-family: 'Playfair Display', 'Georgia', serif; max-width: 600px; margin: 0 auto; border: 1px solid #C5A028; padding: 0; background-color: #F9F6F1; color: #6A1B1B;">
         ${this.getEmailHeader()}
         <div style="padding: 30px;">
-          <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #d4af37; padding-bottom: 10px;">New Customer Review</h2>
+          <h2 style="color: #6A1B1B; text-align: center; border-bottom: 1px solid #C5A028; padding-bottom: 10px;">New Customer Review</h2>
           
-          <div style="background-color: #fff; padding: 25px; border: 1px solid #d4af37; border-radius: 4px; margin: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+          <div style="background-color: #fff; padding: 25px; border: 1px solid #C5A028; border-radius: 4px; margin: 20px 0; box-shadow: 0 2px 10px rgba(197, 160, 40, 0.1);">
             <div style="text-align: center; margin-bottom: 15px;">
-              <span style="color: #d4af37; font-size: 24px;">${'★'.repeat(details.rating)}${'☆'.repeat(5 - details.rating)}</span>
+              <span style="color: #C5A028; font-size: 24px;">${'★'.repeat(details.rating)}${'☆'.repeat(5 - details.rating)}</span>
             </div>
             <p style="margin: 5px 0;"><strong>Customer:</strong> ${details.name}</p>
             ${details.email ? `<p style="margin: 5px 0;"><strong>Email:</strong> ${details.email}</p>` : ''}
-            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #d4af37;">
-              <p style="font-style: italic; color: #444; line-height: 1.6; font-size: 16px;">"${details.comment}"</p>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #C5A028;">
+              <p style="font-style: italic; color: #6A1B1B; line-height: 1.6; font-size: 16px;">"${details.comment}"</p>
             </div>
           </div>
           
-          <div style="text-align: center; margin-top: 35px; background-color: #fcf8e3; padding: 25px; border-radius: 8px; border: 1px solid #faebcc;">
-            <p style="margin-bottom: 20px; font-weight: bold; color: #800000; font-size: 18px;">Display this review on your website?</p>
-            <a href="${approveUrl}" style="background-color: #800000; color: #d4af37; padding: 16px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; border: 2px solid #d4af37; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;">
+          <div style="text-align: center; margin-top: 35px; background-color: white; padding: 25px; border-radius: 8px; border: 1px solid #C5A028;">
+            <p style="margin-bottom: 20px; font-weight: bold; color: #6A1B1B; font-size: 18px;">Display this review on your website?</p>
+            <a href="${approveUrl}" style="background-color: #6A1B1B; color: #C5A028; padding: 16px 32px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; border: 2px solid #C5A028; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 1px;">
               Approve & Add to Website
             </a>
             ${details.email ? `
             <div style="margin-top: 20px;">
-              <a href="mailto:${details.email}" style="color: #800000; text-decoration: underline; font-size: 14px;">Contact customer directly</a>
+              <a href="mailto:${details.email}" style="color: #6A1B1B; text-decoration: underline; font-size: 14px;">Contact customer directly</a>
             </div>` : ''}
           </div>
           
-          <div style="text-align: center; margin-top: 40px; color: #666; font-size: 12px; border-top: 1px solid #d4af37; padding-top: 20px;">
+          <div style="text-align: center; margin-top: 40px; color: #6A1B1B; font-size: 12px; border-top: 1px solid #C5A028; padding-top: 20px; opacity: 0.8;">
             <p>© 2026 Mile Vaganan Events | milevagananevents@gmail.com</p>
           </div>
         </div>
