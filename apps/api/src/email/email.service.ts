@@ -36,7 +36,7 @@ interface ReviewDetails {
 export class EmailService {
   private resend: Resend | null = null;
   private readonly logger = new Logger(EmailService.name);
-  private readonly logoUrl = 'https://mile-vaganan-events.vercel.app/logo.jpg';
+  private readonly logoUrl = 'https://mile-vaganan-events-web.onrender.com/logo.jpg';
 
   private getEmailHeader(customerName?: string) {
     const title = customerName ? `Thank you, ${customerName} 💍` : 'Mile Vaganan Events';
@@ -125,21 +125,25 @@ export class EmailService {
     `;
 
     if (this.resend) {
+      // 1. Send to Admin
       try {
-        // Send to Admin
         await this.resend.emails.send({
           from: 'Mile Vaganan <onboarding@resend.dev>',
           to: adminEmail,
           subject,
           html,
         });
-
-        // Send Confirmation to Customer
-        await this.sendCustomerBookingConfirmation(details);
-        
-        this.logger.log(`Booking notifications sent for ${details.bookingId}`);
+        this.logger.log(`Admin booking notification sent for ${details.bookingId}`);
       } catch (error) {
-        this.logger.error('Failed to send email via Resend', error);
+        this.logger.error(`Admin booking email failed: ${error.message}`);
+      }
+
+      // 2. Send Confirmation to Customer (Separate try/catch)
+      try {
+        await this.sendCustomerBookingConfirmation(details);
+        this.logger.log(`Customer booking confirmation sent to ${details.customerEmail}`);
+      } catch (error) {
+        this.logger.error(`Customer booking confirmation failed: ${error.message}`);
       }
     } else {
       this.logger.log(`[MOCK EMAIL] To: ${adminEmail}`);
@@ -218,22 +222,26 @@ export class EmailService {
     `;
 
     if (this.resend) {
+      // 1. Send to Admin
       try {
-        // Send to Admin
         await this.resend.emails.send({
-           from: 'Mile Vaganan <onboarding@resend.dev>',
-           to: adminEmail,
-           replyTo: details.email,
-           subject,
-           html,
-         });
-
-        // Send Confirmation to Customer
-        await this.sendCustomerLeadConfirmation(details);
-        
-        this.logger.log(`Lead emails sent for ${details.email}`);
+          from: 'Mile Vaganan <onboarding@resend.dev>',
+          to: adminEmail,
+          replyTo: details.email,
+          subject,
+          html,
+        });
+        this.logger.log(`Admin lead notification sent for ${details.email}`);
       } catch (error) {
-        this.logger.error(`FAILED TO SEND EMAIL VIA RESEND: ${error.message}`);
+        this.logger.error(`Admin lead email failed: ${error.message}`);
+      }
+
+      // 2. Send Confirmation to Customer (Separate try/catch)
+      try {
+        await this.sendCustomerLeadConfirmation(details);
+        this.logger.log(`Customer lead confirmation sent to ${details.email}`);
+      } catch (error) {
+        this.logger.error(`Customer lead confirmation failed: ${error.message}`);
       }
     }
   }

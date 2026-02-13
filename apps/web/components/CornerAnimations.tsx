@@ -3,45 +3,59 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-const Flower = ({ side }: { side: 'left' | 'right' }) => {
-  const [delay] = useState(Math.random() * 5);
-  const [duration] = useState(3 + Math.random() * 4);
+const FallingElement = () => {
+  const [delay] = useState(Math.random() * 10);
+  const [duration] = useState(6 + Math.random() * 8);
   const [left] = useState(Math.random() * 100);
-
-  const colors = ['#ffb7c5', '#ff99aa', '#ffd1dc', '#f4cf57'];
+  const [size] = useState(10 + Math.random() * 15);
+  const [rotation] = useState(Math.random() * 360);
+  
+  // Luxury palette: Gold, Champagne, soft Rose, White
+  const colors = ['#D4AF37', '#F9E4B7', '#FFB7C5', '#FFFFFF'];
   const color = colors[Math.floor(Math.random() * colors.length)];
+  const isHeart = Math.random() > 0.5;
 
   return (
     <motion.div
       initial={{ 
         opacity: 0, 
-        y: -20, 
-        x: side === 'left' ? left : -left,
-        rotate: 0,
+        y: -100, 
+        x: `${left}vw`,
+        rotate: rotation,
         scale: 0.5
       }}
       animate={{ 
-        opacity: [0, 1, 1, 0],
-        y: [0, 400, 800],
-        x: side === 'left' ? [left, left + 100, left - 50] : [-left, -left - 100, -left + 50],
-        rotate: [0, 180, 360],
-        scale: [0.5, 1, 0.8]
+        opacity: [0, 0.6, 0.6, 0],
+        y: ['0vh', '100vh'],
+        x: [`${left}vw`, `${left + (Math.random() * 10 - 5)}vw`],
+        rotate: [rotation, rotation + 360],
+        scale: [0.5, 1, 0.7]
       }}
       transition={{ 
         duration, 
         repeat: Infinity, 
         delay,
-        ease: "easeInOut"
+        ease: "linear"
       }}
       className="absolute pointer-events-none select-none"
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path 
-          d="M12 2C12 2 15 8 18 11C21 14 20 18 16 20C12 22 8 22 4 20C0 18 -1 14 2 11C5 8 12 2 12 2Z" 
-          fill={color} 
-          fillOpacity="0.6"
-        />
-      </svg>
+      {isHeart ? (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path 
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" 
+            fill={color} 
+            fillOpacity="0.4"
+          />
+        </svg>
+      ) : (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path 
+            d="M12 2C12 2 15 8 18 11C21 14 20 18 16 20C12 22 8 22 4 20C0 18 -1 14 2 11C5 8 12 2 12 2Z" 
+            fill={color} 
+            fillOpacity="0.3"
+          />
+        </svg>
+      )}
     </motion.div>
   );
 };
@@ -49,12 +63,9 @@ const Flower = ({ side }: { side: 'left' | 'right' }) => {
 export default function CornerAnimations() {
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
-      {/* Flower Streams */}
-      <div className="absolute top-0 left-0 w-64 h-full overflow-hidden opacity-40">
-        {[...Array(15)].map((_, i) => <Flower key={`l-${i}`} side="left" />)}
-      </div>
-      <div className="absolute top-0 right-0 w-64 h-full overflow-hidden opacity-40">
-        {[...Array(15)].map((_, i) => <Flower key={`r-${i}`} side="right" />)}
+      {/* Luxury Falling Stream across whole page */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
+        {[...Array(40)].map((_, i) => <FallingElement key={i} />)}
       </div>
     </div>
   );
