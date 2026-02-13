@@ -17,7 +17,7 @@ export default function VenuesShowcase({ lang }: { lang: string }) {
       price: { en: 'Contact for price', ta: 'விலைக்கு தொடர்பு கொள்ளவும்' }
     },
     {
-      title: { en: 'Heritage Grand Hall – Madurai', ta: 'பாரம்பரிய கிராண்ட் ஹால் – மதுரை' },
+      title: { en: 'Classic Hall – Madurai', ta: 'கிளாசிக் ஹால் – மதுரை' },
       city: 'Madurai',
       img: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
       price: { en: 'Contact for price', ta: 'விலைக்கு தொடர்பு கொள்ளவும்' }
