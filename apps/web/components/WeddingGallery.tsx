@@ -33,12 +33,12 @@ export default function WeddingGallery({ lang }: { lang: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-serif font-bold text-maroon mb-4">
-            {lang === 'en' ? 'Our Wedding Creations' : 'எங்கள் திருமண படைப்புகள்'}
+            {lang === 'en' ? 'Wedding Design Concepts' : 'திருமண வடிவமைப்பு கருத்துக்கள்'}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             {lang === 'en'
-              ? 'Explore our portfolio of stunning weddings we\'ve crafted with love and perfection.'
-              : 'அன்புடன் மற்றும் சரியான முறையில் உருவாக்கிய அழகான திருமணங்களின் எங்கள் போர்ட்ஃபோலியோவை ஆராயுங்கள்.'}
+              ? 'Explore beautiful wedding styles and inspirations we can bring to life for your special day.'
+              : 'உங்கள் சிறப்பு நாளுக்காக நாங்கள் உயிர் கொடுக்கக்கூடிய அழகான திருமண பாணிகள் மற்றும் உத்வேகங்களை ஆராயுங்கள்.'}
           </p>
         </div>
 

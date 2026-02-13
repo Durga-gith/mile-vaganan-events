@@ -47,7 +47,7 @@ export default function Services({ lang }: { lang: string }) {
     decoration: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Elegant decoration
     photography: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Wedding photography
     entertainment: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Live music
-    planning: 'https://images.unsplash.com/photo-1517457373958-b7bdd058a548?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' // Professional event planning
+    planning: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' // Wedding planning coordination
   };
 
   return (
