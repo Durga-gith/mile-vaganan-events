@@ -40,64 +40,6 @@ export default function Hero({ lang }: { lang: string }) {
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-maroon-dark to-transparent z-10"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
-        {/* Live Animations - Elephant Blessing */}
-        <div className="absolute top-20 left-4 md:left-10 z-30 hidden lg:block">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 1 }}
-          >
-            <img 
-              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
-              alt="Elephant Blessing Left" 
-              className="w-48 h-48 object-contain filter drop-shadow-2xl"
-            />
-          </motion.div>
-        </div>
-        <div className="absolute top-20 right-4 md:right-10 z-30 hidden lg:block">
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="scale-x-[-1]"
-          >
-            <img 
-              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
-              alt="Elephant Blessing Right" 
-              className="w-48 h-48 object-contain filter drop-shadow-2xl"
-            />
-          </motion.div>
-        </div>
-
-        {/* Live Animations - Girl Putting Flowers */}
-        <div className="absolute bottom-10 left-10 z-30 hidden md:block">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.5 }}
-          >
-            <img 
-              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
-              alt="Flower Girl Left" 
-              className="w-40 h-40 object-contain filter drop-shadow-2xl"
-            />
-          </motion.div>
-        </div>
-        <div className="absolute bottom-10 right-10 z-30 hidden md:block">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 1.5 }}
-            className="scale-x-[-1]"
-          >
-            <img 
-              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExN3Yyb2p6Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16Ym16JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKDkDbIDJ98YnBK/giphy.gif" 
-              alt="Flower Girl Right" 
-              className="w-40 h-40 object-contain filter drop-shadow-2xl"
-            />
-          </motion.div>
-        </div>
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
