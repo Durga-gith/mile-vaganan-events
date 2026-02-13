@@ -1,18 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import * as dns from 'node:dns';
-
-// FORCE IPv4 ONLY - Render network does not support IPv6 routing for external SMTP
-if (typeof dns.setDefaultResultOrder === 'function') {
-  dns.setDefaultResultOrder('ipv4first');
-}
-
-// Additional lookup check to log what the environment sees
-dns.lookup('smtp.gmail.com', (err, address, family) => {
-  const logger = new Logger('DNSCheck');
-  if (err) logger.error(`DNS Lookup Failed: ${err.message}`);
-  else logger.log(`DNS Lookup: smtp.gmail.com resolved to ${address} (IPv${family})`);
-});
+import { Resend } from 'resend';
 
 interface BookingDetails {
   bookingId: string;
@@ -47,67 +34,21 @@ interface ReviewDetails {
 
 @Injectable()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend | null = null;
   private readonly logger = new Logger(EmailService.name);
 
   constructor() {
-    // In production, these should be env vars.
-    // Fallback to console logging if credentials aren't present.
-    if (process.env.SMTP_HOST && process.env.SMTP_USER) {
-      const smtpPass = process.env.SMTP_PASS ? process.env.SMTP_PASS.replace(/\s/g, '') : '';
-      
-      // We are switching back to 587 but with stricter TLS and IPv4 forcing
-      // Port 465 failed on both IPv4 and IPv6 in previous logs
-      const host = 'smtp.gmail.com';
-      const port = 587;
-      const secure = false;
-
-      this.logger.log(`SMTP Ultimate Strategy: Host=${host}, Port=${port}, User=${process.env.SMTP_USER}`);
-      this.logger.log(`SMTP Pass Length: ${smtpPass.length} characters`);
-      
-      this.transporter = nodemailer.createTransport({
-        host: host,
-        port: port,
-        secure: secure,
-        requireTLS: true,
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: smtpPass,
-        },
-        // Force IPv4 again here
-        family: 4,
-        tls: {
-          // Some cloud providers need this to bypass certificate issues in their proxy
-          rejectUnauthorized: false,
-          minVersion: 'TLSv1.2'
-        },
-        connectionTimeout: 60000,
-        greetingTimeout: 60000,
-        socketTimeout: 60000,
-        debug: true,
-        logger: true,
-      } as any);
-
-      // Detailed verification
-      this.transporter.verify((error, success) => {
-        if (error) {
-          const err = error as any;
-          this.logger.error('SMTP VERIFICATION FAILED! Details:');
-          this.logger.error(`Code: ${err.code}`);
-          this.logger.error(`Message: ${err.message}`);
-          this.logger.error(`Stack: ${err.stack}`);
-        } else {
-          this.logger.log('SMTP CONNECTION SUCCESSFUL - Ready to send emails');
-        }
-      });
+    const apiKey = process.env.RESEND_API_KEY;
+    if (apiKey) {
+      this.resend = new Resend(apiKey);
+      this.logger.log('Resend Email Service Initialized');
     } else {
-      this.logger.warn('SMTP credentials not found. Emails will be logged to console only.');
+      this.logger.warn('RESEND_API_KEY not found. Emails will be logged to console only.');
     }
   }
 
   async sendBookingNotification(details: BookingDetails) {
     const adminEmail = process.env.ADMIN_EMAIL || 'milevagananevents@gmail.com';
-    
     const subject = `New Booking Received: ${details.customerName} - ${details.bookingId}`;
     
     const html = `
@@ -142,20 +83,19 @@ export class EmailService {
       </div>
     `;
 
-    if (this.transporter) {
+    if (this.resend) {
       try {
-        await this.transporter.sendMail({
-          from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
+        await this.resend.emails.send({
+          from: 'Mile Vaganan <onboarding@resend.dev>',
           to: adminEmail,
           subject,
           html,
         });
-        this.logger.log(`Booking notification sent to ${adminEmail}`);
+        this.logger.log(`Booking notification sent to ${adminEmail} via Resend`);
       } catch (error) {
-        this.logger.error('Failed to send email', error);
+        this.logger.error('Failed to send email via Resend', error);
       }
     } else {
-      // Mock sending for development/demo
       this.logger.log(`[MOCK EMAIL] To: ${adminEmail}`);
       this.logger.log(`[MOCK EMAIL] Subject: ${subject}`);
       this.logger.log(`[MOCK EMAIL] Body Preview: New booking from ${details.customerName} for ₹${details.totalAmount}`);
@@ -180,22 +120,19 @@ export class EmailService {
       </div>
     `;
 
-    if (this.transporter) {
+    if (this.resend) {
       try {
-        this.logger.log(`Attempting to send lead email for ${details.email}...`);
-        const info = await this.transporter.sendMail({
-          from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
-          to: adminEmail,
-          replyTo: details.email, // Allow admin to reply directly to the customer
-          subject,
-          html,
-        });
-        this.logger.log(`Lead email sent successfully! Message ID: ${info.messageId}`);
+        this.logger.log(`Attempting to send lead email for ${details.email} via Resend...`);
+        const result = await this.resend.emails.send({
+           from: 'Mile Vaganan <onboarding@resend.dev>',
+           to: adminEmail,
+           replyTo: details.email,
+           subject,
+           html,
+         });
+        this.logger.log(`Lead email sent successfully! ID: ${result.data?.id}`);
       } catch (error) {
-        this.logger.error(`FAILED TO SEND EMAIL: ${error.message}`);
-        this.logger.error(`Error Stack: ${error.stack}`);
-        // DO NOT throw the error. This prevents the 500 error on your website.
-        // The user will see "Success" and you can check the logs to see why the email failed.
+        this.logger.error(`FAILED TO SEND EMAIL VIA RESEND: ${error.message}`);
       }
     } else {
       this.logger.log(`[MOCK LEAD EMAIL] To: ${adminEmail} - from ${details.name}`);
@@ -215,17 +152,17 @@ export class EmailService {
       </div>
     `;
 
-    if (this.transporter) {
+    if (this.resend) {
       try {
-        await this.transporter.sendMail({
-          from: `"Mile Vaganan System" <${process.env.SMTP_USER}>`,
+        await this.resend.emails.send({
+          from: 'Mile Vaganan <onboarding@resend.dev>',
           to: adminEmail,
           subject,
           html,
         });
-        this.logger.log(`Review email sent to ${adminEmail}`);
+        this.logger.log(`Review email sent to ${adminEmail} via Resend`);
       } catch (error) {
-        this.logger.error('Failed to send review email', error);
+        this.logger.error('Failed to send review email via Resend', error);
       }
     } else {
       this.logger.log(`[MOCK REVIEW EMAIL] To: ${adminEmail} - from ${details.name}`);
