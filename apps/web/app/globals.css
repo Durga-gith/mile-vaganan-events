@@ -50,6 +50,21 @@
   .glass-card {
     @apply bg-white/80 backdrop-blur-md border border-gold/20 rounded-2xl shadow-xl;
   }
+
+  .corner-gif {
+    @apply fixed w-[120px] z-[9999] pointer-events-none opacity-90 drop-shadow-2xl transition-all duration-500;
+  }
+
+  .top-left { @apply top-0 left-0; }
+  .top-right { @apply top-0 right-0 scale-x-[-1]; }
+  .bottom-left { @apply bottom-0 left-0; }
+  .bottom-right { @apply bottom-0 right-0 scale-x-[-1]; }
+
+  @media (max-width: 768px) {
+    .corner-gif {
+      @apply w-[70px];
+    }
+  }
 }
 
 .animate-float {
