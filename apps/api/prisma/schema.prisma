@@ -111,3 +111,15 @@ model BookingItem {
   price     Decimal
   date      DateTime
 }
+
+model Review {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  rating    Int
+  comment   String
+  approved  Boolean  @default(false)
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
