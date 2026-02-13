@@ -38,16 +38,18 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private readonly logoUrl = 'https://mile-vaganan-events.vercel.app/logo.jpg';
 
-  private readonly emailHeader = `
-    <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background-color: #800000; background-image: linear-gradient(to bottom, #800000, #600000);">
-      <div style="display: inline-block; padding: 10px; background: white; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-        <img src="${this.logoUrl}" alt="Mile Vaganan Events" style="width: 80px; height: 80px; object-fit: contain; display: block;" />
+  private getEmailHeader() {
+    return `
+      <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background-color: #800000; background-image: linear-gradient(to bottom, #800000, #600000);">
+        <div style="display: inline-block; padding: 15px; background: white; border-radius: 50%; margin-bottom: 20px; border: 3px solid #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+          <img src="${this.logoUrl}" alt="Mile Vaganan Events" width="100" height="100" style="display: block; width: 100px; height: 100px; border-radius: 50%;" />
+        </div>
+        <h1 style="color: #d4af37; margin: 0; font-family: 'Playfair Display', 'Georgia', serif; font-size: 32px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold;">Mile Vaganan Events</h1>
+        <div style="width: 60px; height: 2px; background: #d4af37; margin: 15px auto;"></div>
+        <p style="color: #fffaf0; margin: 0; font-style: italic; font-size: 18px; font-family: 'Georgia', serif; letter-spacing: 1px;">Crafting Royal Weddings & Memorable Events</p>
       </div>
-      <h1 style="color: #d4af37; margin: 0; font-family: 'Playfair Display', serif; font-size: 28px; text-transform: uppercase; letter-spacing: 2px;">Mile Vaganan Events</h1>
-      <div style="width: 50px; hieght: 2px; background: #d4af37; margin: 15px auto;"></div>
-      <p style="color: #fffaf0; margin: 0; font-style: italic; font-size: 16px; font-family: 'Georgia', serif;">Crafting Royal Weddings & Memorable Events</p>
-    </div>
-  `;
+    `;
+  }
 
   constructor() {
     const apiKey = process.env.RESEND_API_KEY;
@@ -64,8 +66,8 @@ export class EmailService {
     const subject = `New Booking Received: ${details.customerName} - ${details.bookingId}`;
     
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #d4af37; padding: 0;">
-        ${this.emailHeader}
+      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
+        ${this.getEmailHeader()}
         <div style="padding: 20px;">
           <h2 style="color: #800000; text-align: center;">New Booking Alert</h2>
           <p><strong>Customer Name:</strong> ${details.customerName}</p>
@@ -125,7 +127,7 @@ export class EmailService {
     const subject = `Booking Confirmed! - Mile Vaganan Events`;
     const html = `
       <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
-        ${this.emailHeader}
+        ${this.getEmailHeader()}
         <div style="padding: 40px;">
           <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #d4af37; pb: 10px;">Booking Confirmation</h2>
           
@@ -172,8 +174,8 @@ export class EmailService {
     const subject = `New Booking Enquiry from ${details.name}`;
 
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #d4af37; padding: 0;">
-        ${this.emailHeader}
+      <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
+        ${this.getEmailHeader()}
         <div style="padding: 20px;">
           <h2 style="color: #800000; text-align: center;">New Booking Enquiry</h2>
           <p><strong>Name:</strong> ${details.name}</p>
@@ -213,7 +215,7 @@ export class EmailService {
     const subject = `Enquiry Received - Mile Vaganan Events`;
     const html = `
       <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
-        ${this.emailHeader}
+        ${this.getEmailHeader()}
         <div style="padding: 40px;">
           <h2 style="color: #800000; text-align: center;">Hello ${details.name}!</h2>
           
@@ -254,7 +256,7 @@ export class EmailService {
 
     const html = `
       <div style="font-family: 'Playfair Display', serif; max-width: 600px; margin: 0 auto; border: 2px solid #d4af37; padding: 0; background-color: #fffaf0;">
-        ${this.emailHeader}
+        ${this.getEmailHeader()}
         <div style="padding: 30px;">
           <h2 style="color: #800000; text-align: center; border-bottom: 1px solid #d4af37; padding-bottom: 10px;">New Customer Review</h2>
           
