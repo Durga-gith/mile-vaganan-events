@@ -23,26 +23,18 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
     { en: 'Mail Us', ta: 'மின்னஞ்சல்', href: 'mailto:milevagananevents@gmail.com' },
   ];
 
+  const leftNavItems = navItems.slice(0, 3);
+  const rightNavItems = navItems.slice(3);
+
   return (
     <nav className={`fixed w-full top-0 z-50 transition-all duration-500 ${
-      scrolled ? 'bg-white/90 backdrop-blur-lg shadow-lg py-2' : 'bg-transparent py-4'
+      scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg py-1' : 'bg-transparent py-4'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center"
-          >
-            <span className={`text-3xl font-bold font-serif tracking-tighter transition-colors duration-300 ${
-              scrolled ? 'text-maroon' : 'text-ivory'
-            }`}>
-              Mile <span className="text-gold">Vaganan</span>
-            </span>
-          </motion.div>
-          
-          <div className="hidden md:flex items-center space-x-10">
-            {navItems.map((item, idx) => (
+        <div className="flex justify-between items-center h-24 md:h-28">
+          {/* Desktop Left Nav */}
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-end">
+            {leftNavItems.map((item, idx) => (
               <motion.a 
                 key={idx} 
                 href={item.href}
@@ -57,23 +49,65 @@ export default function Navbar({ lang, setLang }: { lang: string, setLang: (l: s
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
               </motion.a>
             ))}
+          </div>
+
+          {/* Logo - Center */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center justify-center px-8 z-10"
+          >
+            <img 
+              src="/logo.jpg" 
+              alt="Mile Vaganan Events Logo" 
+              className={`transition-all duration-500 ${scrolled ? 'h-16 w-16' : 'h-20 w-20'} object-contain mb-1`}
+              onError={(e) => {
+                // Fallback if logo doesn't exist yet
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+            <span className={`text-xl md:text-2xl font-bold font-serif tracking-tighter transition-colors duration-300 text-center leading-none ${
+              scrolled ? 'text-maroon' : 'text-ivory'
+            }`}>
+              Mile <span className="text-gold">Vaganan</span><br className="md:hidden" /> Events
+            </span>
+          </motion.div>
+          
+          {/* Desktop Right Nav */}
+          <div className="hidden md:flex items-center space-x-8 flex-1 justify-start">
+            {rightNavItems.map((item, idx) => (
+              <motion.a 
+                key={idx} 
+                href={item.href}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: (idx + 3) * 0.1 }}
+                className={`transition-all duration-300 font-medium hover:text-gold relative group ${
+                  scrolled ? 'text-maroon' : 'text-ivory'
+                }`}
+              >
+                {lang === 'en' ? item.en : item.ta}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+              </motion.a>
+            ))}
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setLang(lang === 'en' ? 'ta' : 'en')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-full transition-all duration-300 border ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 border ${
                 scrolled 
                   ? 'bg-maroon text-white border-maroon hover:bg-maroon-dark' 
                   : 'bg-white/10 text-ivory border-ivory/30 hover:bg-white/20'
               }`}
             >
-              <Globe size={18} />
-              <span className="text-sm font-semibold tracking-wide">
+              <Globe size={16} />
+              <span className="text-xs font-semibold tracking-wide">
                 {lang === 'en' ? 'தமிழ்' : 'English'}
               </span>
             </motion.button>
           </div>
 
+          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button 
               onClick={() => setIsOpen(!isOpen)} 
