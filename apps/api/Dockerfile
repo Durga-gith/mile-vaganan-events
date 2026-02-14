@@ -15,17 +15,18 @@ RUN ls -la
 RUN npm install
 
 # Find the prisma schema and generate client
-# This finds it whether we are in root or in apps/api
+# We provide a dummy DATABASE_URL during build time to satisfy Prisma's validation
 RUN PRISMA_SCHEMA=$(find . -name "schema.prisma" | head -n 1) && \
     echo "Found schema at: $PRISMA_SCHEMA" && \
-    npx prisma generate --schema=$PRISMA_SCHEMA
+    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate --schema=$PRISMA_SCHEMA
 
 # Build the API
-# We try both root-style and local-style build
-RUN npm run build --workspace=api || (cd apps/api && npm run build) || npm run build
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build --workspace=api || \
+    (cd apps/api && DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build) || \
+    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build
 
 # Expose port
 EXPOSE 3001
 
-# Start command - adjusted for potential path differences
-CMD ["sh", "-c", "node apps/api/dist/main || node dist/main"]
+# Start command - runs database sync then starts the server
+CMD ["sh", "-c", "PRISMA_SCHEMA=$(find . -name \"schema.prisma\" | head -n 1) && npx prisma db push --schema=$PRISMA_SCHEMA --accept-data-loss && (node apps/api/dist/main || node dist/main)"]
