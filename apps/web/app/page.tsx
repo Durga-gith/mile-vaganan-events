@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
 import ReviewForm from '../components/ReviewForm';
+import Reviews from '../components/Reviews';
 import Offers from '../components/Offers';
 import BookingForm from '../components/BookingForm';
 import WeddingGallery from '../components/WeddingGallery';
@@ -30,6 +31,7 @@ export default function Home() {
       <WeddingGallery lang={lang} />
       <BookingForm lang={lang} />
       <Offers lang={lang} />
+      <Reviews lang={lang} />
       <ReviewForm lang={lang} />
     </main>
   );
