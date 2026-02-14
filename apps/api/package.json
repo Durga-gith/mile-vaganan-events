@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf dist && prisma generate && prisma db push --accept-data-loss",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
