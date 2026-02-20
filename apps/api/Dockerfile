@@ -10,9 +10,8 @@ RUN ls -la
 
 RUN npm install
 
-ARG PRISMA_SCHEMA_PATH=apps/api/prisma/schema.prisma
-RUN echo "Using schema at: $PRISMA_SCHEMA_PATH" && \
-    DATABASE_URL="mongodb://localhost:27017/dummy" npx prisma generate --schema=$PRISMA_SCHEMA_PATH
+# Generate Prisma Client explicitly from the API schema
+RUN cd apps/api && DATABASE_URL="mongodb://localhost:27017/dummy" npx prisma generate --schema=prisma/schema.prisma
 
 RUN DATABASE_URL="mongodb://localhost:27017/dummy" npm run build --workspace=api || \
     (cd apps/api && DATABASE_URL="mongodb://localhost:27017/dummy" npm run build) || \
@@ -20,4 +19,5 @@ RUN DATABASE_URL="mongodb://localhost:27017/dummy" npm run build --workspace=api
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "PRISMA_SCHEMA_PATH=apps/api/prisma/schema.prisma; if [ ! -f \"$PRISMA_SCHEMA_PATH\" ]; then PRISMA_SCHEMA_PATH=prisma/schema.prisma; fi; echo Using schema: $PRISMA_SCHEMA_PATH; npx prisma db push --schema=$PRISMA_SCHEMA_PATH --accept-data-loss && (node apps/api/dist/main || node dist/main)"]
+# Run db push and start the API using the API schema only
+CMD ["sh", "-c", "cd apps/api && npx prisma db push --schema=prisma/schema.prisma --accept-data-loss && node dist/main"]
