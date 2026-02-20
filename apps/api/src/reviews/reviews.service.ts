@@ -33,7 +33,34 @@ export class ReviewsService {
 
       return review;
     } catch (e: any) {
-      this.logger.error(`addReview error: ${e?.message || e}`);
+      const msg = e?.message || String(e);
+      this.logger.error(`addReview error: ${msg}`);
+
+      // Fallback for MongoDB deployments that disallow transactions on single writes
+      if (msg.includes('Transactions are not supported')) {
+        this.logger.warn('Falling back to raw Mongo insert for Review due to transaction restriction');
+        const now = new Date();
+        const doc: any = {
+          name: (payload.name || '').trim(),
+          email: payload.email?.trim(),
+          rating: Number(payload.rating),
+          comment: (payload.comment || '').trim(),
+          approved: false,
+          isDeleted: false,
+          createdAt: now,
+          updatedAt: now,
+        };
+        const res: any = await (this.prisma as any).$runCommandRaw({
+          insert: 'Review',
+          documents: [doc],
+        });
+        // Prisma will map _id ObjectId <-> id string automatically on reads
+        return {
+          id: String(res?.insertedIds?.[0] ?? ''),
+          ...doc,
+        };
+      }
+
       throw e;
     }
   }
