@@ -9,9 +9,7 @@ services:
     region: singapore # Close to India
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: mile-vaganan-db
-          property: connectionString
+        sync: false # Set this in Render dashboard to your MongoDB connection string
       - key: SMTP_HOST
         value: smtp.gmail.com
       - key: SMTP_PORT
@@ -38,13 +36,6 @@ services:
           type: web
           name: mile-vaganan-api
           property: url
-
-databases:
-  - name: mile-vaganan-db
-    databaseName: milevaganan
-    user: milevaganan
-    plan: free
-    region: singapore
 
 # Redis is not available on free tier blueprint?
 # Render supports Redis instances.
