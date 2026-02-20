@@ -1,13 +1,19 @@
-import { Controller, Post, Body, Get, Query, Delete, Param, Headers, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Delete, Param, Headers, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
+  private readonly logger = new Logger(ReviewsController.name);
 
   @Post()
   async addReview(@Body() body: { name: string; email?: string; rating: number; comment: string }) {
-    return this.reviewsService.addReview(body);
+    try {
+      return await this.reviewsService.addReview(body);
+    } catch (e: any) {
+      this.logger.error(`POST /reviews failed: ${e?.message || e}`);
+      throw new BadRequestException('Failed to add review');
+    }
   }
 
   @Get()
