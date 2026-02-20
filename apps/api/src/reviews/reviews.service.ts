@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { EmailService } from '../email/email.service';
 
@@ -8,24 +8,31 @@ export class ReviewsService {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService
   ) {}
+  private readonly logger = new Logger(ReviewsService.name);
 
   async addReview(payload: { name: string; email?: string; rating: number; comment: string }) {
-    // Save to database
-    const review = await this.prisma.review.create({
-      data: {
-        name: payload.name,
-        email: payload.email,
-        rating: payload.rating,
-        comment: payload.comment,
-        approved: false,
-        isDeleted: false,
-      },
-    });
+    try {
+      const review = await this.prisma.review.create({
+        data: {
+          name: payload.name,
+          email: payload.email,
+          rating: payload.rating,
+          comment: payload.comment,
+          approved: false,
+          isDeleted: false,
+        },
+      });
 
-    // Send notification to admin
-    await this.emailService.sendReviewEmail(payload);
-    
-    return review;
+      // Send notification to admin, but don't fail the request if email fails
+      this.emailService
+        .sendReviewEmail(payload as any)
+        .catch((e) => this.logger.warn(`sendReviewEmail failed: ${e?.message || e}`));
+
+      return review;
+    } catch (e: any) {
+      this.logger.error(`addReview error: ${e?.message || e}`);
+      throw e;
+    }
   }
 
   async getApprovedReviews() {
