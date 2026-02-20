@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -25,7 +25,7 @@ enum BookingStatus {
 }
 
 model User {
-  id        String    @id @default(uuid())
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   email     String    @unique
   password  String
   name      String?
@@ -37,15 +37,15 @@ model User {
 }
 
 model ServiceCategory {
-  id           String                @id @default(uuid())
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
   slug         String                @unique // e.g., 'venues', 'catering'
   translations ServiceCategoryTranslation[]
   services     VendorService[]
 }
 
 model ServiceCategoryTranslation {
-  id          String          @id @default(uuid())
-  categoryId  String
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId  String          @db.ObjectId
   language    String          // 'en' or 'ta'
   name        String
   category    ServiceCategory @relation(fields: [categoryId], references: [id])
@@ -53,11 +53,11 @@ model ServiceCategoryTranslation {
 }
 
 model VendorService {
-  id           String                   @id @default(uuid())
-  categoryId   String
+  id           String                   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId   String                   @db.ObjectId
   category     ServiceCategory          @relation(fields: [categoryId], references: [id])
   vendorId     String // In a real app, relation to User or Vendor profile
-  price        Decimal
+  price        Float
   city         String
   translations VendorServiceTranslation[]
   bookings     BookingItem[]
@@ -66,8 +66,8 @@ model VendorService {
 }
 
 model VendorServiceTranslation {
-  id          String        @id @default(uuid())
-  serviceId   String
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  serviceId   String        @db.ObjectId
   language    String        // 'en' or 'ta'
   name        String
   description String?
@@ -76,10 +76,10 @@ model VendorServiceTranslation {
 }
 
 model Discount {
-  id          String       @id @default(uuid())
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
   code        String       @unique
   type        DiscountType
-  value       Decimal
+  value       Float
   maxUses     Int // e.g., 10 for "First 10 Customers"
   usedCount   Int          @default(0)
   city        String?      // Optional: if null, applies globally
@@ -90,11 +90,11 @@ model Discount {
 }
 
 model Booking {
-  id          String        @id @default(uuid())
-  userId      String
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String        @db.ObjectId
   user        User          @relation(fields: [userId], references: [id])
-  totalAmount Decimal
-  discountId  String?
+  totalAmount Float
+  discountId  String?       @db.ObjectId
   discount    Discount?     @relation(fields: [discountId], references: [id])
   status      BookingStatus @default(PENDING)
   items       BookingItem[]
@@ -103,17 +103,17 @@ model Booking {
 }
 
 model BookingItem {
-  id        String        @id @default(uuid())
-  bookingId String
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId String        @db.ObjectId
   booking   Booking       @relation(fields: [bookingId], references: [id])
-  serviceId String
+  serviceId String        @db.ObjectId
   service   VendorService @relation(fields: [serviceId], references: [id])
-  price     Decimal
+  price     Float
   date      DateTime
 }
 
 model Review {
-  id        String   @id @default(uuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String?
   rating    Int

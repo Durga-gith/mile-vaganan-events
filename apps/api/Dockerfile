@@ -18,12 +18,12 @@ RUN npm install
 # We provide a dummy DATABASE_URL during build time to satisfy Prisma's validation
 RUN PRISMA_SCHEMA=$(find . -name "schema.prisma" | head -n 1) && \
     echo "Found schema at: $PRISMA_SCHEMA" && \
-    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate --schema=$PRISMA_SCHEMA
+    DATABASE_URL="mongodb://localhost:27017/dummy" npx prisma generate --schema=$PRISMA_SCHEMA
 
 # Build the API
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build --workspace=api || \
-    (cd apps/api && DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build) || \
-    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build
+RUN DATABASE_URL="mongodb://localhost:27017/dummy" npm run build --workspace=api || \
+    (cd apps/api && DATABASE_URL="mongodb://localhost:27017/dummy" npm run build) || \
+    DATABASE_URL="mongodb://localhost:27017/dummy" npm run build
 
 # Expose port
 EXPOSE 3001
