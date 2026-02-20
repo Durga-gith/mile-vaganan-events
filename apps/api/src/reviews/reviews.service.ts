@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { MongoClient } from 'mongodb';
 import { PrismaService } from '../prisma.service';
 import { EmailService } from '../email/email.service';
 
@@ -11,30 +12,31 @@ export class ReviewsService {
   private readonly logger = new Logger(ReviewsService.name);
 
   async addReview(payload: { name: string; email?: string; rating: number; comment: string }) {
+    const client = new MongoClient(process.env.DATABASE_URL!);
     try {
-      const review = await this.prisma.review.create({
-        data: {
-          name: (payload.name || '').trim(),
-          email: payload.email?.trim(),
-          rating: Number(payload.rating),
-          comment: (payload.comment || '').trim(),
-          approved: false,
-          isDeleted: false,
-        },
-      });
-
-      const emailEnabled = (process.env.EMAIL_ENABLED ?? 'true').toLowerCase() !== 'false';
-      if (emailEnabled) {
-        this.emailService
-          .sendReviewEmail(payload as any)
-          .catch((e) => this.logger.warn(`sendReviewEmail failed: ${e?.message || e}`));
-      }
-
-      return review;
+      await client.connect();
+      const db = client.db('milevaganam');
+      const collection = db.collection('Review');
+      const review = {
+        name: (payload.name || '').trim(),
+        email: payload.email?.trim(),
+        rating: Number(payload.rating),
+        comment: (payload.comment || '').trim(),
+        approved: false,
+        isDeleted: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const result = await collection.insertOne(review as any);
+      return {
+        id: result.insertedId.toString(),
+        ...review,
+      };
     } catch (e: any) {
-      const msg = e?.message || String(e);
-      this.logger.error(`addReview error: ${msg}`);
+      this.logger.error(`Native Mongo insert failed: ${e?.message || e}`);
       throw e;
+    } finally {
+      await client.close();
     }
   }
 
