@@ -14,10 +14,10 @@ export class ReviewsService {
     try {
       const review = await this.prisma.review.create({
         data: {
-          name: payload.name,
-          email: payload.email,
-          rating: payload.rating,
-          comment: payload.comment,
+          name: (payload.name || '').trim(),
+          email: payload.email?.trim(),
+          rating: Number(payload.rating),
+          comment: (payload.comment || '').trim(),
           approved: false,
           isDeleted: false,
         },

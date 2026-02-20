@@ -11,8 +11,9 @@ export class ReviewsController {
     try {
       return await this.reviewsService.addReview(body);
     } catch (e: any) {
-      this.logger.error(`POST /reviews failed: ${e?.message || e}`);
-      throw new BadRequestException('Failed to add review');
+      const msg = e?.message || String(e);
+      this.logger.error(`POST /reviews failed: ${msg}`);
+      throw new BadRequestException(`Failed to add review: ${msg}`);
     }
   }
 
