@@ -28,10 +28,22 @@ export class ReviewsService {
         updatedAt: new Date(),
       };
       const result = await collection.insertOne(review as any);
-      return {
+      const created = {
         id: result.insertedId.toString(),
         ...review,
       };
+      const emailEnabled = (process.env.EMAIL_ENABLED ?? 'true').toLowerCase() !== 'false';
+      if (emailEnabled) {
+        this.emailService
+          .sendReviewEmail({
+            name: review.name,
+            email: review.email,
+            rating: review.rating,
+            comment: review.comment,
+          } as any)
+          .catch((e) => this.logger.warn(`sendReviewEmail failed: ${e?.message || e}`));
+      }
+      return created;
     } catch (e: any) {
       this.logger.error(`Native Mongo insert failed: ${e?.message || e}`);
       throw e;

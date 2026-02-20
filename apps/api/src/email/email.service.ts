@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
 interface BookingDetails {
   bookingId: string;
@@ -35,6 +36,7 @@ interface ReviewDetails {
 @Injectable()
 export class EmailService {
   private resend: Resend | null = null;
+  private transporter: nodemailer.Transporter | null = null;
   private readonly logger = new Logger(EmailService.name);
   private readonly logoUrl = 'https://mile-vaganan-events-web.onrender.com/logo.jpg';
 
@@ -78,7 +80,21 @@ export class EmailService {
       this.resend = new Resend(apiKey);
       this.logger.log('Resend Email Service Initialized');
     } else {
-      this.logger.warn('RESEND_API_KEY not found. Emails will be logged to console only.');
+      const host = process.env.SMTP_HOST;
+      const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : undefined;
+      const user = process.env.SMTP_USER;
+      const pass = process.env.SMTP_PASS;
+      if (host && port && user && pass) {
+        this.transporter = nodemailer.createTransport({
+          host,
+          port,
+          secure: port === 465,
+          auth: { user, pass },
+        });
+        this.logger.log('SMTP transporter initialized');
+      } else {
+        this.logger.warn('RESEND_API_KEY not found and SMTP not configured. Emails will be logged only.');
+      }
     }
   }
 
@@ -349,6 +365,18 @@ export class EmailService {
         this.logger.log(`Review email sent to ${adminEmail} with approval option`);
       } catch (error) {
         this.logger.error('Failed to send review email via Resend', error);
+      }
+    } else if (this.transporter) {
+      try {
+        await this.transporter.sendMail({
+          from: `"Mile Vaganan Admin" <${process.env.SMTP_USER}>`,
+          to: adminEmail,
+          subject,
+          html,
+        });
+        this.logger.log(`Review email sent via SMTP to ${adminEmail}`);
+      } catch (error: any) {
+        this.logger.error(`SMTP send failed: ${error?.message || error}`);
       }
     }
   }
