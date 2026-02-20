@@ -27,4 +27,4 @@ RUN DATABASE_URL="mongodb://localhost:27017/dummy" npm run build --workspace=api
 EXPOSE 3001
 
 # Run db push and start the API (detect schema and dist paths)
-CMD ["sh", "-c", "if [ -f apps/api/prisma/schema.prisma ]; then SCHEMA=apps/api/prisma/schema.prisma; else SCHEMA=prisma/schema.prisma; fi; echo Using schema: $SCHEMA; npx prisma db push --schema=$SCHEMA --accept-data-loss && (node apps/api/dist/main || node dist/main)"]
+CMD ["sh", "-c", "if [ -f apps/api/prisma/schema.prisma ]; then SCHEMA=apps/api/prisma/schema.prisma; DIST=apps/api/dist/main; else SCHEMA=prisma/schema.prisma; DIST=dist/main; fi; echo Using schema: $SCHEMA; npx prisma db push --schema=$SCHEMA --accept-data-loss && echo Starting server at $DIST on PORT=${PORT:-3001} && ls -la $(dirname $DIST) || true && node $DIST"]
