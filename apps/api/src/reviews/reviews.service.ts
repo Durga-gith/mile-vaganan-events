@@ -23,10 +23,13 @@ export class ReviewsService {
         },
       });
 
-      // Send notification to admin, but don't fail the request if email fails
-      this.emailService
-        .sendReviewEmail(payload as any)
-        .catch((e) => this.logger.warn(`sendReviewEmail failed: ${e?.message || e}`));
+      // Optional email: disable by setting EMAIL_ENABLED=false
+      const emailEnabled = (process.env.EMAIL_ENABLED ?? 'true').toLowerCase() !== 'false';
+      if (emailEnabled) {
+        this.emailService
+          .sendReviewEmail(payload as any)
+          .catch((e) => this.logger.warn(`sendReviewEmail failed: ${e?.message || e}`));
+      }
 
       return review;
     } catch (e: any) {
